@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#00fff7">
+<title>FodaScroll — FodaSocial</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./fs-core.css">
+</head>
+<body class="locked" data-song="scroll">
+<header>
+  <span class="logo">FODASOCIAL</span>
+  <span class="statuspill"><span id="netdot" class="dot" title="rede"></span><small id="netlabel" class="mut">…</small></span>
+  <button id="musbtn" onclick="musToggle()" title="trilha sonora">🎵</button>
+  <button id="me" onclick="location.href='./foda-perfil.html'" title="meu perfil">👤</button>
+</header>
+<nav id="tabs">
+  <button data-t="feed" onclick="location.href='./foda-feed.html'">📰 FodaFeed</button>
+  <button data-t="videos" onclick="location.href='./foda-watch.html'">📺 FodaWatch</button>
+  <button data-t="shorts" class="active">📱 FodaScroll</button>
+  <button data-t="servidores" onclick="location.href='./foda-chat.html'">💬 FodaChat</button>
+  <button data-t="amigos" onclick="location.href='./foda-amigos.html'">🤝 Amigos</button>
+  <button data-t="perfil" onclick="location.href='./foda-perfil.html'">😎 Perfil</button>
+  <button data-t="jogos" onclick="location.href='./foda-jogos.html'">🎮 Jogos</button>
+</nav>
+<main id="view"></main>
+<div id="toast"></div>
+<footer>FodaSocial — só gente real. Sem bots, sem feed fake. Use com respeito.</footer>
+<script src="./fs-core.js"></script>
+<script>
+/* ================= FodaScroll: shorts verticais ================= */
+async function shortRender(){
+  const box=$('view'),m=me(),vs=(await fsVideos()).filter(v=>v.short);
+  if(!vs.length){box.innerHTML='<div class="empty">📱 Sem shorts.<br>Publica um vídeo marcado como short no 📺 FodaWatch.</div>';return;}
+  box.innerHTML='<div id="shortsWrap">'+vs.map(v=>{
+    const liked=m&&v.likes.includes(m.nick);
+    return `<div class="short"><video src="${esc(v.url)}" loop playsinline onclick="this.paused?this.play():this.pause()"></video><div class="cap"><b>${esc(v.title)}</b><br>@${esc(v.nick)}</div><div class="ov"><button onclick="vidLike('${v.id}')" title="curtir">${liked?'💖':'🤍'}</button><button onclick="location.href='./foda-watch.html'" title="comentários">💬</button></div></div>`;
+  }).join('')+'</div><p class="mut">Toca no vídeo pra pausar/rodar.</p>';
+}
+window.pageReady=shortRender;
+bootGate();
+</script>
+</body>
+</html>

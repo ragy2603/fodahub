@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#00fff7">
+<title>Jogos — FodaSocial</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./fs-core.css">
+</head>
+<body class="locked" data-song="jogos">
+<header>
+  <span class="logo">FODASOCIAL</span>
+  <span class="statuspill"><span id="netdot" class="dot" title="rede"></span><small id="netlabel" class="mut">…</small></span>
+  <button id="musbtn" onclick="musToggle()" title="trilha sonora">🎵</button>
+  <button id="me" onclick="location.href='./foda-perfil.html'" title="meu perfil">👤</button>
+</header>
+<nav id="tabs">
+  <button data-t="feed" onclick="location.href='./foda-feed.html'">📰 FodaFeed</button>
+  <button data-t="videos" onclick="location.href='./foda-watch.html'">📺 FodaWatch</button>
+  <button data-t="shorts" onclick="location.href='./foda-scroll.html'">📱 FodaScroll</button>
+  <button data-t="servidores" onclick="location.href='./foda-chat.html'">💬 FodaChat</button>
+  <button data-t="amigos" onclick="location.href='./foda-amigos.html'">🤝 Amigos</button>
+  <button data-t="perfil" onclick="location.href='./foda-perfil.html'">😎 Perfil</button>
+  <button data-t="jogos" class="active">🎮 Jogos</button>
+</nav>
+<main id="view"></main>
+<div id="toast"></div>
+<footer>FodaSocial — só gente real. Sem bots, sem feed fake. Use com respeito.</footer>
+<script src="./fs-core.js"></script>
+<script>
+/* ================= Jogos com amigos ================= */
+function jogRender(){
+  const box=$('view'),m=me();
+  let h=`<div class="card"><h3>🎮 Jogos com amigos</h3><p class="mut">Cria uma sala, passa o código pra galera e joga junto. Salas na nuvem — todo mundo vê.</p>`;
+  if(m)h+=`<div class="row"><select id="j-game" style="flex:1;min-width:140px"><option value="debate">Debate Final 16-bit</option><option value="emu">Sala de emuladores</option><option value="ports">Ports</option><option value="livre">Jogo livre</option></select><button class="mbtn small" onclick="roomNew()">+ criar sala</button></div>`;
+  else h+=`<p class="mut">Entra pra jogar.</p>`;
+  h+=`</div><div id="j-list"></div>`;
+  box.innerHTML=h;roomList();
+}
+async function rooms(){
+  const {data,error}=await SUPA.from('rooms').select('*').order('ts',{ascending:false}).limit(40);
+  if(error){toast('❌ '+error.message);return [];}
+  return (data||[]).map(r=>({code:r.code,game:r.game,host:r.host,players:r.players||[]}));
+}
+async function roomNew(){
+  const m=needMe();if(!m)return;
+  const game=$('j-game').value,code=Math.random().toString(36).slice(2,7).toUpperCase();
+  const {error}=await SUPA.from('rooms').insert({code,game,host:m.nick,players:[m.nick],ts:Date.now()});
+  if(error)return toast('❌ '+error.message);
+  roomList();toast('🎮 Sala '+code+' criada! Passa o código.');
+}
+async function roomList(){
+  const el=$('j-list');if(!el)return;const m=me(),l=await rooms();
+  if(!l.length){el.innerHTML='<div class="empty">🕹️ Nenhuma sala aberta.<br>Cria a primeira e chama os amigos!</div>';return;}
+  const gname={debate:'Debate Final 16-bit',emu:'Sala de emuladores',ports:'Ports',livre:'Jogo livre'};
+  el.innerHTML=l.map(r=>`<div class="card"><b>🎮 ${esc(gname[r.game]||r.game)}</b> <span class="pill">sala ${esc(r.code)}</span><br><span class="mut">host: ${esc(r.host)} • na sala: ${r.players.map(esc).join(', ')}</span><div class="row">${m&&!r.players.includes(m.nick)?`<button class="mbtn small" onclick="roomJoin('${esc(r.code)}')">Entrar</button>`:''}<button class="mbtn ghost small" onclick="roomPlay('${esc(r.game)}')">▶ Jogar</button></div></div>`).join('');
+}
+async function roomJoin(code){
+  const m=needMe();if(!m)return;
+  const {data}=await SUPA.from('rooms').select('players').eq('code',code).single();
+  const p=(data&&data.players)||[];
+  if(!p.includes(m.nick))p.push(m.nick);
+  await SUPA.from('rooms').update({players:p}).eq('code',code);
+  roomList();toast('Entrou na sala '+code+'!');
+}
+function roomPlay(game){
+  const map={debate:'fodahub.html',emu:'fodahub.html#emu',ports:'fodahub.html'};
+  toast('🎮 Abrindo o jogo — boa partida!');
+  window.open(map[game]||'fodahub.html','_blank');
+}
+window.pageReady=jogRender;
+bootGate();
+</script>
+</body>
+</html>

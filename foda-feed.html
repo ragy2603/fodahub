@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#00fff7">
+<title>FodaFeed — FodaSocial</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./fs-core.css">
+</head>
+<body class="locked" data-song="feed">
+<header>
+  <span class="logo">FODASOCIAL</span>
+  <span class="statuspill"><span id="netdot" class="dot" title="rede"></span><small id="netlabel" class="mut">…</small></span>
+  <button id="musbtn" onclick="musToggle()" title="trilha sonora">🎵</button>
+  <button id="me" onclick="location.href='./foda-perfil.html'" title="meu perfil">👤</button>
+</header>
+<nav id="tabs">
+  <button data-t="feed" class="active">📰 FodaFeed</button>
+  <button data-t="videos" onclick="location.href='./foda-watch.html'">📺 FodaWatch</button>
+  <button data-t="shorts" onclick="location.href='./foda-scroll.html'">📱 FodaScroll</button>
+  <button data-t="servidores" onclick="location.href='./foda-chat.html'">💬 FodaChat</button>
+  <button data-t="amigos" onclick="location.href='./foda-amigos.html'">🤝 Amigos</button>
+  <button data-t="perfil" onclick="location.href='./foda-perfil.html'">😎 Perfil</button>
+  <button data-t="jogos" onclick="location.href='./foda-jogos.html'">🎮 Jogos</button>
+</nav>
+<main id="view"></main>
+<div id="toast"></div>
+<footer>FodaSocial — só gente real. Sem bots, sem feed fake. Use com respeito.</footer>
+<script src="./fs-core.js"></script>
+<script>
+/* ================= FodaFeed: posts com foto + fóruns + grupos ================= */
+function feedCount(){const t=$('f-txt'),c=$('f-count');if(t&&c)c.textContent=280-t.value.length;}
+function feedRender(){
+  const box=$('view'),m=me();
+  let h=`<div class="card"><h3>📰 FodaFeed</h3><p class="mut">Todo mundo vê. Zero bots: só aparece o que gente real postou.</p>`;
+  if(m)h+=`<div class="row" style="align-items:center;margin-bottom:2px"><span style="font-size:26px">${esc(m.ava)}</span><b>${esc(m.nick)}</b><span class="mut" style="margin-left:auto" id="f-count">280</span></div><textarea id="f-txt" maxlength="280" oninput="feedCount()" placeholder="O que tá pegando?"></textarea><div class="row"><label class="pill" style="cursor:pointer">📷 foto<input type="file" id="f-img" accept="image/*" hidden></label><button class="mbtn" style="flex:1" onclick="feedPost()">📣 Postar</button></div>`;
+  else h+=`<p class="mut">Entra pra postar.</p>`;
+  h+=`<details class="sect"><summary>📜 Fóruns</summary><div id="feed-forum"></div></details><details class="sect"><summary>👥 Grupos</summary><div id="feed-groups"></div></details></div><div id="f-list"></div>`;
+  box.innerHTML=h;feedList();forumRender();grpRender();
+}
+async function feedPosts(){
+  const {data,error}=await SUPA.from('posts').select('*').order('ts',{ascending:false}).limit(100);
+  if(error){toast('❌ '+error.message);return [];}
+  return (data||[]).map(p=>({id:String(p.id),nick:p.nick,ava:p.ava||'😎',text:p.text,ts:p.ts,likes:p.likes||[],img:p.img||''}));
+}
+async function feedPost(){  const m=needMe();if(!m)return;
+  const t=($('f-txt').value||'').trim().slice(0,280);
+  const fi=$('f-img'),f=fi&&fi.files[0];
+  if(!t&&!f)return toast('⚠️ Escreve algo ou manda foto!');
+  toast('⏳ Postando...');
+  let img='';
+  if(f){
+    toast('⏳ Comprimindo foto...');
+    const small=await shrinkPhoto(f);
+    if(small.size>FS_MAX_PHOTO_MB*1048576)return toast('⚠️ Foto passa de '+FS_MAX_PHOTO_MB+' MB mesmo comprimida');
+    const u=await stoUsage(m.nick);
+    if(u.bytes+small.size>FS_MAX_USER_MB*1048576)return toast('⚠️ Tua cota acabou ('+fmtMB(u.bytes)+'/'+FS_MAX_USER_MB+' MB). Apaga algo!');
+    const path=m.nick+'/'+Date.now()+'_foto.jpg';
+    const {error:uerr}=await SUPA.storage.from('midia').upload(path,small,{contentType:'image/jpeg'});
+    if(uerr)return toast('❌ '+uerr.message);
+    img=SUPA.storage.from('midia').getPublicUrl(path).data.publicUrl;
+  }
+  const {error}=await SUPA.from('posts').insert({nick:m.nick,ava:m.ava,text:t,ts:Date.now(),likes:[],img});
+  if(error)return toast('❌ '+error.message);
+  feedRender();toast('📣 Postado!');
+}
+async function feedList(){
+  const el=$('f-list');if(!el)return;el.innerHTML='<p class="mut">Carregando...</p>';
+  const m=me(),posts=await feedPosts();
+  if(!posts.length){el.innerHTML='<div class="empty">🌵 Nada aqui ainda.<br>Seja a primeira pessoa real a postar.</div>';return;}
+  el.innerHTML=posts.map(p=>{
+    const liked=m&&p.likes.includes(m.nick);
+    return `<div class="card post"><div class="who" onclick="viewPerfil('${esc(p.nick)}')" style="cursor:pointer"><span style="font-size:28px">${esc(p.ava)}</span><div class="meta"><b>${esc(p.nick)}</b><small>• ${ago(p.ts)}</small></div></div>${p.img?`<img src="${esc(p.img)}" loading="lazy" style="width:100%;border-radius:12px;margin-top:8px">`:''}<p class="txt">${esc(p.text)}</p><div class="acts"><button class="${liked?'liked':''}" onclick="feedLike('${p.id}')">${liked?'💖':'🤍'} ${p.likes.length}</button><button onclick="feedComments('${p.id}')">💬 comentar</button>${m&&m.nick===p.nick?`<button onclick="feedDel('${p.id}')">🗑️</button>`:''}</div><div class="cbox" id="c-${p.id}" style="display:none"></div></div>`;
+  }).join('');
+}
+async function feedLike(id){
+  const m=needMe();if(!m)return;
+  const {data}=await SUPA.from('posts').select('likes').eq('id',isNaN(+id)?id:+id).single();
+  let likes=(data&&data.likes)||[];
+  likes=likes.includes(m.nick)?likes.filter(x=>x!==m.nick):likes.concat([m.nick]);
+  await SUPA.from('posts').update({likes}).eq('id',isNaN(+id)?id:+id);
+  feedList();
+}
+async function feedDel(id){
+  if(!confirm('Apagar?'))return;
+  await SUPA.from('posts').delete().eq('id',isNaN(+id)?id:+id);
+  feedList();
+}
+async function feedComments(id){
+  const box=$('c-'+id);if(!box)return;box.style.display=box.style.display==='none'?'block':'none';
+  if(box.style.display==='none')return;
+  const m=me();
+  const {data}=await SUPA.from('comments').select('*').eq('post_id',isNaN(+id)?id:+id).order('ts');
+  const cm=(data||[]).map(c=>({nick:c.nick,text:c.text,ts:c.ts}));
+  box.innerHTML=cm.map(c=>`<p class="c"><b>${esc(c.nick)}:</b> ${esc(c.text)}</p>`).join('')+((m)?`<div class="row"><input type="text" id="ci-${id}" maxlength="200" placeholder="Comenta..." style="flex:1"><button class="mbtn small" onclick="feedSend('${id}')">➤</button></div>`:'');
+}
+async function feedSend(id){
+  const m=needMe();if(!m)return;
+  const inp=$('ci-'+id),t=(inp.value||'').trim().slice(0,200);if(!t)return;
+  await SUPA.from('comments').insert({post_id:isNaN(+id)?id:+id,nick:m.nick,text:t,ts:Date.now()});
+  feedComments(id);feedComments(id);
+}
+/* ---------- fóruns ---------- */
+function forumRender(){
+  const box=$('feed-forum'),m=me();if(!box)return;
+  let h=`<p class="mut">Comunidades com threads.</p><div id="sub-list" class="row"></div>`;
+  if(m)h+=`<div class="row"><input type="text" id="sub-new" maxlength="24" placeholder="nova comunidade..." style="flex:1;min-width:140px"><button class="mbtn small" onclick="subNew()">+ criar</button></div>`;
+  h+=`<div id="thread-box"></div>`;
+  box.innerHTML=h;subList();
+}
+async function subs(){
+  const {data,error}=await SUPA.from('forums').select('*').order('name');
+  if(error){toast('❌ '+error.message);return [];}
+  return (data||[]).map(f=>({id:String(f.id),name:f.name}));
+}
+async function subList(){
+  const el=$('sub-list'),l=await subs();
+  el.innerHTML=l.map(s=>`<button class="mbtn ghost small" onclick="threadList('${esc(s.id)}','${esc(s.name)}')">r/${esc(s.name)}</button>`).join('')||'<span class="mut">sem comunidades — cria a primeira!</span>';
+}
+async function subNew(){
+  const m=needMe();if(!m)return;
+  const n=($('sub-new').value||'').trim().toLowerCase().replace(/[^a-z0-9_]/g,'').slice(0,24);
+  if(n.length<3)return toast('⚠️ Nome com 3+ letras/números');
+  const {error}=await SUPA.from('forums').insert({name:n});
+  if(error)return toast('❌ '+error.message);
+  forumRender();
+}
+async function threadList(sub,name){
+  const box=$('thread-box'),m=me();
+  const {data}=await SUPA.from('threads').select('*').eq('forum',sub).order('ts',{ascending:false});
+  const th=(data||[]).map(t=>({id:String(t.id),title:t.title,nick:t.nick,ts:t.ts}));
+  let h=`<div class="card"><h3>r/${esc(name||sub)}</h3>`;
+  if(m)h+=`<div class="row"><input type="text" id="th-new" maxlength="80" placeholder="título da thread..." style="flex:1"><button class="mbtn small" onclick="threadNew('${esc(sub)}','${esc(name||sub)}')">Postar</button></div>`;
+  h+=`</div>`;
+  h+=th.length?th.map(t=>`<div class="card post"><b>${esc(t.title)}</b><br><span class="mut">por ${esc(t.nick)} • ${ago(t.ts)}</span><div class="acts"><button onclick="replyList('${t.id}')">💬 respostas</button></div><div class="cbox" id="r-${t.id}" style="display:none"></div></div>`).join(''):'<div class="empty">🌵 Nenhuma thread. Abre a primeira!</div>';
+  box.innerHTML=h;
+}
+async function threadNew(sub,name){
+  const m=needMe();if(!m)return;
+  const t=($('th-new').value||'').trim().slice(0,80);if(!t)return toast('⚠️ Título!');
+  await SUPA.from('threads').insert({forum:sub,title:t,nick:m.nick,ts:Date.now()});
+  threadList(sub,name);
+}
+async function replyList(tid){
+  const box=$('r-'+tid);if(!box)return;box.style.display=box.style.display==='none'?'block':'none';
+  if(box.style.display==='none')return;
+  const m=me();
+  const {data}=await SUPA.from('replies').select('*').eq('thread_id',isNaN(+tid)?tid:+tid).order('ts');
+  const rp=(data||[]).map(r=>({nick:r.nick,text:r.text,ts:r.ts}));
+  box.innerHTML=rp.map(r=>`<p class="c"><b>${esc(r.nick)}:</b> ${esc(r.text)}</p>`).join('')+((m)?`<div class="row"><input type="text" id="ri-${tid}" maxlength="300" placeholder="Responder..." style="flex:1"><button class="mbtn small" onclick="replySend('${tid}')">➤</button></div>`:'');
+}
+async function replySend(tid){
+  const m=needMe();if(!m)return;
+  const t=($('ri-'+tid).value||'').trim().slice(0,300);if(!t)return;
+  await SUPA.from('replies').insert({thread_id:isNaN(+tid)?tid:+tid,nick:m.nick,text:t,ts:Date.now()});
+  replyList(tid);replyList(tid);
+}
+/* ---------- grupos ---------- */
+function grpRender(){
+  const box=$('feed-groups'),m=me();if(!box)return;
+  let h=`<p class="mut">Entra e posta com a galera do tema.</p><div id="g-list" class="row"></div>`;
+  if(m)h+=`<div class="row"><input type="text" id="g-new" maxlength="24" placeholder="novo grupo..." style="flex:1;min-width:140px"><button class="mbtn small" onclick="grpNew()">+ criar</button></div>`;
+  h+=`<div id="g-box"></div>`;
+  box.innerHTML=h;grpList();
+}
+async function groups(){
+  const {data,error}=await SUPA.from('groups').select('*').order('name');
+  if(error){toast('❌ '+error.message);return [];}
+  return (data||[]).map(g=>({id:String(g.id),name:g.name,by:g.by||'?'}));
+}
+async function grpList(){
+  const el=$('g-list'),l=await groups();
+  el.innerHTML=l.map(g=>`<button class="mbtn ghost small" onclick="grpOpen('${esc(g.id)}','${esc(g.name)}')">👥 ${esc(g.name)}</button>`).join('')||'<span class="mut">sem grupos — cria o primeiro!</span>';
+}
+async function grpNew(){
+  const m=needMe();if(!m)return;
+  const n=($('g-new').value||'').trim().slice(0,24);if(n.length<3)return toast('⚠️ Nome 3+');
+  const {error}=await SUPA.from('groups').insert({name:n,by:m.nick});
+  if(error)return toast('❌ '+error.message);
+  grpRender();
+}
+async function grpOpen(id,name){
+  const m=me();
+  const {data}=await SUPA.from('group_posts').select('*').eq('grp',id).order('ts',{ascending:false}).limit(60);
+  const ps=(data||[]).map(p=>({nick:p.nick,text:p.text,ts:p.ts}));
+  $('g-box').innerHTML=`<div class="card"><h3>👥 ${esc(name)}</h3>${m?`<div class="row"><input type="text" id="gp-in" maxlength="280" placeholder="Posta no grupo..." style="flex:1"><button class="mbtn small" onclick="grpPost('${esc(id)}','${esc(name)}')">➤</button></div>`:'<p class="mut">Entra pra postar.</p>'}<div style="margin-top:8px">`+(ps.length?ps.map(p=>`<p class="c"><b>${esc(p.nick)}:</b> ${esc(p.text)} <span class="mut">• ${ago(p.ts)}</span></p>`).join(''):'<p class="mut">Grupo novo. Puxa o papo!</p>')+`</div></div>`;
+}
+async function grpPost(id,name){
+  const m=needMe();if(!m)return;
+  const t=($('gp-in').value||'').trim().slice(0,280);if(!t)return;
+  await SUPA.from('group_posts').insert({grp:id,nick:m.nick,text:t,ts:Date.now()});
+  grpOpen(id,name);
+}
+window.pageReady=feedRender;
+bootGate();
+</script>
+</body>
+</html>

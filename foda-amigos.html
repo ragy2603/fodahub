@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#00fff7">
+<title>Amigos — FodaSocial</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./fs-core.css">
+</head>
+<body class="locked" data-song="amigos">
+<header>
+  <span class="logo">FODASOCIAL</span>
+  <span class="statuspill"><span id="netdot" class="dot" title="rede"></span><small id="netlabel" class="mut">…</small></span>
+  <button id="musbtn" onclick="musToggle()" title="trilha sonora">🎵</button>
+  <button id="me" onclick="location.href='./foda-perfil.html'" title="meu perfil">👤</button>
+</header>
+<nav id="tabs">
+  <button data-t="feed" onclick="location.href='./foda-feed.html'">📰 FodaFeed</button>
+  <button data-t="videos" onclick="location.href='./foda-watch.html'">📺 FodaWatch</button>
+  <button data-t="shorts" onclick="location.href='./foda-scroll.html'">📱 FodaScroll</button>
+  <button data-t="servidores" onclick="location.href='./foda-chat.html'">💬 FodaChat</button>
+  <button data-t="amigos" class="active">🤝 Amigos</button>
+  <button data-t="perfil" onclick="location.href='./foda-perfil.html'">😎 Perfil</button>
+  <button data-t="jogos" onclick="location.href='./foda-jogos.html'">🎮 Jogos</button>
+</nav>
+<main id="view"></main>
+<div id="toast"></div>
+<footer>FodaSocial — só gente real. Sem bots, sem feed fake. Use com respeito.</footer>
+<script src="./fs-core.js"></script>
+<script>
+/* ================= Amigos ================= */
+async function amigosRender(){
+  const m=needMe();if(!m)return;
+  const box=$('view');
+  box.innerHTML=`<div class="card"><h3>🤝 Amigos</h3><p class="mut">Adiciona pelo nick exato. Tudo com gente real.</p><div class="row"><input type="text" id="am-new" maxlength="20" placeholder="nick do amigo..." style="flex:1"><button class="mbtn small" onclick="amAdd()">Adicionar</button><button class="mbtn ghost small" onclick="amigosRender()">↻</button></div></div><div id="am-list"><p class="mut">Carregando...</p></div>`;
+  amList();
+}
+async function amList(){
+  const el=$('am-list');if(!el)return;const m=me(),fr=await myFriends();
+  if(!fr.length){el.innerHTML='<div class="empty">🫗 Sem amigos ainda.<br>Adiciona pelo nick!</div>';return;}
+  const {data}=await SUPA.from('profiles').select('*').in('nick',fr);
+  const profs={};(data||[]).forEach(p=>profs[p.nick]=p);
+  el.innerHTML='';
+  for(const n of fr){
+    const p=profs[n]||{};
+    const row=document.createElement('div');row.className='card';
+    row.innerHTML=`<div class="amig"><span class="avbig">${esc(p.ava||'🙂')}</span><div style="flex:1;min-width:0"><b style="color:${esc(p.color||'#fff')}">${esc(n)}</b><br><span class="mut" id="on-${esc(n)}">• checando...</span></div><div class="row" style="margin:0"><button class="mbtn ghost small" onclick="viewPerfil('${esc(n)}')">👁️</button><button class="mbtn ghost small" onclick="dmOpen('${esc(n)}')">💬</button><button class="mbtn ghost small" onclick="callStart('${esc(n)}',false)">🎤</button><button class="mbtn ghost small" onclick="callStart('${esc(n)}',true)">🎥</button><button class="mbtn ghost small" onclick="amDel('${esc(n)}')">✖</button></div></div>`;
+    el.appendChild(row);
+    pingFriend(n);
+  }
+}
+async function amAdd(){
+  const m=needMe();if(!m)return;
+  const n=($('am-new').value||'').trim().slice(0,20);if(!n)return;
+  if(n.toLowerCase()===m.nick.toLowerCase())return toast('⚠️ Esse é você!');
+  const {data:all}=await SUPA.from('profiles').select('nick');
+  const found=(all||[]).map(p=>p.nick).find(x=>x.toLowerCase()===n.toLowerCase());
+  if(!found)return toast('⚠️ Nick não encontrado (precisa ter entrado ao menos 1x)');
+  const {error}=await SUPA.from('friends').insert({owner:m.nick,friend:found,ts:Date.now()});
+  if(error)return toast('❌ '+error.message);
+  amigosRender();toast('🤝 Amigo adicionado!');
+}
+async function amDel(nick){
+  const m=needMe();if(!m)return;
+  if(!confirm('Remover '+nick+'?'))return;
+  await SUPA.from('friends').delete().eq('owner',m.nick).eq('friend',nick);
+  amigosRender();
+}
+async function pingFriend(n){
+  const el=document.getElementById('on-'+n);
+  try{
+    const {data}=await SUPA.from('profiles').select('peer').eq('nick',n).single();
+    const pid=data&&data.peer;
+    if(!pid){if(el)el.textContent='• nunca entrou';return;}
+    peerLib(async ()=>{
+      if(!PEER||!PEER.open){await new Promise(r=>{ensurePeer();setTimeout(r,2500);});}
+      if(!PEER||!PEER.open){if(el)el.textContent='• ?';return;}
+      if(el)el.textContent='• checando...';
+      let c;try{c=PEER.connect(pid,{reliable:true});}catch(e){if(el)el.textContent='⚫ offline';return;}
+      const done=ok=>{try{c.close();}catch(e){}if(el)el.textContent=ok?'🟢 online':'⚫ offline';};
+      const to=setTimeout(()=>done(false),3000);
+      c.on('open',()=>{clearTimeout(to);done(true);});
+      c.on('error',()=>{clearTimeout(to);done(false);});
+    });
+  }catch(e){if(el)el.textContent='• ?';}
+}
+window.pageReady=amigosRender;
+bootGate();
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#00fff7">
+<title>Perfil — FodaSocial</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./fs-core.css">
+</head>
+<body class="locked" data-song="perfil">
+<header>
+  <span class="logo">FODASOCIAL</span>
+  <span class="statuspill"><span id="netdot" class="dot" title="rede"></span><small id="netlabel" class="mut">…</small></span>
+  <button id="musbtn" onclick="musToggle()" title="trilha sonora">🎵</button>
+  <button id="me" onclick="location.href='./foda-perfil.html'" title="meu perfil">👤</button>
+</header>
+<nav id="tabs">
+  <button data-t="feed" onclick="location.href='./foda-feed.html'">📰 FodaFeed</button>
+  <button data-t="videos" onclick="location.href='./foda-watch.html'">📺 FodaWatch</button>
+  <button data-t="shorts" onclick="location.href='./foda-scroll.html'">📱 FodaScroll</button>
+  <button data-t="servidores" onclick="location.href='./foda-chat.html'">💬 FodaChat</button>
+  <button data-t="amigos" onclick="location.href='./foda-amigos.html'">🤝 Amigos</button>
+  <button data-t="perfil" class="active">😎 Perfil</button>
+  <button data-t="jogos" onclick="location.href='./foda-jogos.html'">🎮 Jogos</button>
+</nav>
+<main id="view"></main>
+<div id="toast"></div>
+<footer>FodaSocial — só gente real. Sem bots, sem feed fake. Use com respeito.</footer>
+<script src="./fs-core.js"></script>
+<script>
+/* ================= Perfil ================= */
+let pfAva='😎';
+const PF_AVAS=['😎','🔥','🐱','🐶','🦊','🐼','👾','🤖','💀','👻','🦄','🐸','🦁','🐯','🐵','🍕','⚡','🌙','⭐','🎮','🍩','👑','💎','🛹'];
+function curPf(){return{ava:pfAva,bio:(($('pf-bio')||{}).value||'').slice(0,120),color:(($('pf-color')||{}).value||'#00fff7'),banner:(($('pf-banner')||{}).value||'#7b2ff7'),status:(($('pf-status')||{}).value||'').slice(0,60)};}
+async function perfilRender(){
+  const m=needMe();if(!m)return;
+  const {data}=await SUPA.from('profiles').select('*').eq('nick',m.nick).single();
+  const p=data||{ava:'😎',bio:'',color:'#00fff7',banner:'#7b2ff7',status:''};
+  pfAva=p.ava||'😎';
+  const box=$('view');
+  box.innerHTML=`<div class="card"><h3>😎 Meu perfil</h3><p class="mut">Do teu jeito — todo mundo vê.</p>
+    <label class="lbl">AVATAR</label><div class="row" id="pf-avas">${PF_AVAS.map(a=>`<button class="mbtn ${a===pfAva?'':'ghost'} small" onclick="pfSetAva('${a}')">${a}</button>`).join('')}</div>
+    <div class="row"><div><label class="lbl">COR DO NICK</label><input type="color" id="pf-color" value="${esc(p.color||'#00fff7')}" oninput="profPreview(curPf())"></div><div><label class="lbl">BANNER</label><input type="color" id="pf-banner" value="${esc(p.banner||'#7b2ff7')}" oninput="profPreview(curPf())"></div></div>
+    <label class="lbl">STATUS</label><input type="text" id="pf-status" maxlength="60" placeholder="ex: online p/ jogar!" value="${esc(p.status||'')}">
+    <label class="lbl">BIO</label><input type="text" id="pf-bio" maxlength="120" placeholder="bio..." value="${esc(p.bio||'')}">
+    <button class="mbtn" style="width:100%" onclick="pfSave()">Salvar perfil</button></div>
+    <div class="card"><h3>👁️ Prévia pública</h3><div id="profcard-prev"></div></div>
+    <div class="card"><h3>💾 Meu espaço</h3><p class="mut" id="pf-quota">medindo...</p><p class="mut">Cota justa: 200 MB e 15 vídeos por pessoa.</p></div>
+    <div class="card"><h3>🔐 Conta</h3><p class="mut">${esc(m.nick)} • sessão ativa</p><button class="mbtn ghost small" onclick="logout()">🚪 Sair</button></div>`;
+  profPreview(curPf());quotaShow();
+}
+function pfSetAva(a){pfAva=a;document.querySelectorAll('#pf-avas button').forEach(b=>b.classList.toggle('ghost',b.textContent!==a));profPreview(curPf());}
+function profPreview(p){
+  const el=$('profcard-prev');if(!el||!me())return;
+  el.innerHTML=`<div id="profcard"><div id="profbanner" style="background:${esc(p.banner)}"></div><div style="padding:10px;text-align:center"><span style="font-size:40px">${esc(p.ava)}</span><br><b style="color:${esc(p.color)}">${esc(me().nick)}</b><br><span class="mut">${esc(p.status||'')}</span><p style="font-size:13px;margin-top:4px">${esc(p.bio||'')}</p></div></div>`;
+}
+async function pfSave(){
+  const m=needMe();if(!m)return;const p=curPf();
+  const {error}=await SUPA.from('profiles').upsert({nick:m.nick,ava:p.ava,bio:p.bio,color:p.color,banner:p.banner,status:p.status,updated:Date.now()},{onConflict:'nick'});
+  if(error)return toast('❌ '+error.message);
+  setMe(Object.assign({},m,{ava:p.ava}));meUI();toast('✅ Perfil salvo!');
+}
+async function quotaShow(){
+  const el=$('pf-quota');if(!el)return;const m=me();if(!m)return;
+  const u=await stoUsage(m.nick);
+  el.textContent='💾 Teu espaço: '+fmtMB(u.bytes)+' / '+FS_MAX_USER_MB+' MB • '+u.count+' arquivos';
+}
+window.pageReady=perfilRender;
+bootGate();
+</script>
+</body>
+</html>
