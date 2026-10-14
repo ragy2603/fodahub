@@ -266,6 +266,7 @@ body.in-apps #view-apps{display:block}
           <button class="jcatbtn active" data-jc="originais" type="button">🆕<span>ORIGINAIS</span></button>
           <button class="jcatbtn" data-jc="ports" type="button">📦<span>PORTS</span></button>
           <button class="jcatbtn" data-jc="emu" type="button">🕹️<span>EMULADORES</span></button>
+          <button class="jcatbtn" data-jc="fodapps" type="button">📱<span>FODAPPS</span></button>
                   </nav>
         <div class="jcontent">
           <section class="jc-pane active" id="jc-originais">
@@ -289,6 +290,16 @@ body.in-apps #view-apps{display:block}
           <section class="jc-pane" id="jc-emu">
             <p class="msub">Escolhe o sistema — abre direto no emulador. Depois carrega tua ROM.</p>
             <div class="emugrid" id="emu-sysgrid"></div>
+          </section>
+          <section class="jc-pane" id="jc-fodapps">
+            <div class="db-card" onclick="window.open('./fodasocial.html','_blank')">
+              <div style="font-size:44px">🔥</div>
+              <b>FODASOCIAL</b>
+              <span>Rede de gente real, zero bots<br>feed, vídeos, chat, calls e jogos</span>
+              <i>▶ ABRIR</i>
+            </div>
+            <p class="msub">Entra direto numa parte:</p>
+            <div class="emugrid" id="fodapps-grid"></div>
           </section>
 
         </div>
@@ -1396,7 +1407,25 @@ function emuSystem(core){
   retroOpen();
   toast('🕹️ '+(a?a.label:core)+' pronto! Carrega tua ROM.');
 }
-portsBuild('');emuSysBuild();
+const FODAPPS=[
+  {url:'./fodasocial.html',label:'📰 FodaFeed',sub:'posts, fotos, fóruns'},
+  {url:'./fodasocial.html',label:'📺 FodaWatch',sub:'vídeos longos'},
+  {url:'./fodasocial.html',label:'📱 FodaScroll',sub:'vídeos curtos'},
+  {url:'./fodasocial.html',label:'💬 FodaChat',sub:'servidores, DM, calls'},
+  {url:'./fodasocial.html',label:'🤝 Amigos',sub:'amizades reais'},
+  {url:'./fodasocial.html',label:'😎 Perfil',sub:'teu perfil'},
+  {url:'./fodasocial.html',label:'🎮 Jogos',sub:'salas com amigos'},
+];
+function fodappsBuild(){
+  const g=$('fodapps-grid'); if(!g||g.children.length)return;
+  FODAPPS.forEach(a=>{
+    const b=document.createElement('button');b.type='button';
+    b.innerHTML=a.label+'<small>'+a.sub+'</small>';
+    b.onclick=()=>window.open(a.url,'_blank');
+    g.appendChild(b);
+  });
+}
+portsBuild('');emuSysBuild();fodappsBuild();
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){try{const r=$('retro-stage');if(r&&r.style.display!=='none'){retroBack();toast('👋 De volta ao menu');}}catch(_){}}});
 
 // FODAPPS (sala pronta; apps chegam depois)
