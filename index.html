@@ -266,7 +266,8 @@ body.in-apps #view-apps{display:block}
           <button class="jcatbtn active" data-jc="originais" type="button">🆕<span>ORIGINAIS</span></button>
           <button class="jcatbtn" data-jc="ports" type="button">📦<span>PORTS</span></button>
           <button class="jcatbtn" data-jc="emu" type="button">🕹️<span>EMULADORES</span></button>
-          <button class="jcatbtn" data-jc="fodapps" type="button">📱<span>FODAPPS</span></button>
+          <button class="jcatbtn" data-jc="fodasocial" type="button">🔥<span>FODASOCIAL</span></button>
+          <button class="jcatbtn" data-jc="ghostapps" type="button">👻<span>GHOSTAPPS</span></button>
                   </nav>
         <div class="jcontent">
           <section class="jc-pane active" id="jc-originais">
@@ -291,15 +292,12 @@ body.in-apps #view-apps{display:block}
             <p class="msub">Escolhe o sistema — abre direto no emulador. Depois carrega tua ROM.</p>
             <div class="emugrid" id="emu-sysgrid"></div>
           </section>
-          <section class="jc-pane" id="jc-fodapps">
-            <div class="db-card" onclick="window.open('./fodasocial.html','_blank')">
-              <div style="font-size:44px">🔥</div>
-              <b>FODASOCIAL</b>
-              <span>Rede de gente real, zero bots<br>feed, vídeos, chat, calls e jogos</span>
-              <i>▶ ABRIR</i>
-            </div>
-            <p class="msub">Entra direto numa parte:</p>
-            <div class="emugrid" id="fodapps-grid"></div>
+          <section class="jc-pane" id="jc-fodasocial">
+            <div class="empty">🔥 FODASOCIAL em reconstrução.<br>Volta em breve.</div>
+          </section>
+          <section class="jc-pane" id="jc-ghostapps">
+            <p class="msub">Apps feitos por Santiago Macambira.</p>
+            <div class="emugrid" id="ghostapps-grid"></div>
           </section>
 
         </div>
@@ -706,7 +704,7 @@ function syncViews(){
   $('musicbtn').title=inM?'voltar pra home':'ouvir música';
 }
 function toggleMusic(){const v=!document.body.classList.contains('in-music');if(v){try{dbBack()}catch(e){}try{retroBack()}catch(e){}emuOn=false}document.body.classList.remove('in-music','in-jogos','in-apps');if(v)document.body.classList.add('in-music');syncViews();window.scrollTo(0,0)}
-function toggleJogos(){const v=!document.body.classList.contains('in-jogos');if(!v){try{dbBack()}catch(e){}try{retroBack()}catch(e){}try{portsHide()}catch(e){}emuOn=false}document.body.classList.remove('in-music','in-jogos','in-apps');if(v){document.body.classList.add('in-jogos');try{emuOn=true;emuDucked=false;emuApplyVol();emuSetSong('hub');emuMusicStart();portsBuild('');emuSysBuild();}catch(e){}}syncViews();window.scrollTo(0,0)}
+function toggleJogos(){const v=!document.body.classList.contains('in-jogos');if(!v){try{dbBack()}catch(e){}try{retroBack()}catch(e){}try{portsHide()}catch(e){}emuOn=false}document.body.classList.remove('in-music','in-jogos','in-apps');if(v){document.body.classList.add('in-jogos');try{emuOn=true;emuDucked=false;emuApplyVol();emuSetSong('hub');emuMusicStart();portsBuild('');emuSysBuild();ghostappsBuild();}catch(e){}}syncViews();window.scrollTo(0,0)}
 function mparse(raw){
   const url=(raw||'').trim();
   if(!url)return{error:'Cole um link primeiro!'};
@@ -1407,25 +1405,34 @@ function emuSystem(core){
   retroOpen();
   toast('🕹️ '+(a?a.label:core)+' pronto! Carrega tua ROM.');
 }
-const FODAPPS=[
-  {url:'./fodasocial.html',label:'📰 FodaFeed',sub:'posts, fotos, fóruns'},
-  {url:'./fodasocial.html',label:'📺 FodaWatch',sub:'vídeos longos'},
-  {url:'./fodasocial.html',label:'📱 FodaScroll',sub:'vídeos curtos'},
-  {url:'./fodasocial.html',label:'💬 FodaChat',sub:'servidores, DM, calls'},
-  {url:'./fodasocial.html',label:'🤝 Amigos',sub:'amizades reais'},
-  {url:'./fodasocial.html',label:'😎 Perfil',sub:'teu perfil'},
-  {url:'./fodasocial.html',label:'🎮 Jogos',sub:'salas com amigos'},
+const GHOSTAPPS=[
+  {url:'./GhostAPPS/GhostHUB.html',label:'🌀 GOOFY HUB',sub:'500 goofys + sons'},
+  {url:'./GhostAPPS/goofy-chirp.html',label:'🐥 GOOFY CHIRP',sub:'rede goofy'},
+  {url:'./GhostAPPS/goofy-survivors.html',label:'🌀 GOOFY SURVIVORS',sub:'sobreviva ao Ohio'},
+  {url:'./GhostAPPS/FiveNightsAtBrainrots.html',label:'🎩 Five Nights at Memes',sub:'goofy 2026'},
+  {url:'./GhostAPPS/SKOOLEST.html',label:'👻 SKOOLEST',sub:'você nunca abriu'},
+  {url:'./GhostAPPS/minha-janela-aberta.html',label:'🪟 Minha Janela',sub:'click jogos'},
+  {url:'./GhostAPPS/pixelcord.html',label:'👾 Pixelcord',sub:'chat pixel art'},
 ];
-function fodappsBuild(){
-  const g=$('fodapps-grid'); if(!g||g.children.length)return;
-  FODAPPS.forEach(a=>{
+function ghostappsBuild(){
+  const g=$('ghostapps-grid'); if(!g||g.children.length)return;
+  GHOSTAPPS.forEach((a,i)=>{
     const b=document.createElement('button');b.type='button';
     b.innerHTML=a.label+'<small>'+a.sub+'</small>';
-    b.onclick=()=>window.open(a.url,'_blank');
+    b.onclick=()=>ghostOpen(i);
     g.appendChild(b);
   });
 }
-portsBuild('');emuSysBuild();fodappsBuild();
+function ghostOpen(i){
+  const a=GHOSTAPPS[i]; if(!a)return;
+  portWasOn=emuMusicOn;
+  emuMusicStopAuto();
+  $('port-title').textContent='▶ '+a.label;
+  $('port-frame').src=a.url;
+  $('port-tab').onclick=()=>window.open(a.url,'_blank');
+  $('port-player').classList.add('open');
+}
+portsBuild('');emuSysBuild();ghostappsBuild();
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){try{const r=$('retro-stage');if(r&&r.style.display!=='none'){retroBack();toast('👋 De volta ao menu');}}catch(_){}}});
 
 // FODAPPS (sala pronta; apps chegam depois)
