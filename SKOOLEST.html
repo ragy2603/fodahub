@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOCÊ NUNCA ABRIU ESTE SITE</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --preto:#000;
+    --cinza-1:#0a0a0a;
+    --cinza-2:#1a1a1a;
+    --cinza-3:#2e2e2e;
+    --cinza-4:#555;
+    --cinza-5:#888;
+    --cinza-6:#aaa;
+    --cinza-7:#d0d0d0;
+    --branco:#e8e8e8;
+  }
+  html{scroll-behavior:smooth;background:#000}
+  body{
+    background:var(--preto);
+    color:var(--cinza-7);
+    font-family:'Courier New',Courier,monospace;
+    overflow-x:hidden;
+    cursor:crosshair;
+  }
+  ::selection{background:#555;color:#000}
+  ::-webkit-scrollbar{width:8px}
+  ::-webkit-scrollbar-track{background:#000}
+  ::-webkit-scrollbar-thumb{background:#333}
+
+  /* RUÍDO */
+  .noise{
+    position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.07;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grain .4s steps(4) infinite;
+  }
+  @keyframes grain{
+    0%{transform:translate(0,0)}25%{transform:translate(-2%,3%)}
+    50%{transform:translate(3%,-2%)}75%{transform:translate(-3%,-3%)}100%{transform:translate(2%,2%)}
+  }
+  .vignette{position:fixed;inset:0;z-index:9998;pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,.9) 100%);}
+
+  /* TOPO FIXO */
+  .hud{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    display:flex;justify-content:space-between;
+    padding:12px 20px;font-size:11px;letter-spacing:2px;
+    color:var(--cinza-5);border-bottom:1px solid #1a1a1a;
+    background:rgba(0,0,0,.85);backdrop-filter:blur(10px);
+  }
+
+  section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:80px 20px;position:relative;border-bottom:1px solid #111;text-align:center}
+
+  .small{font-size:11px;letter-spacing:5px;color:var(--cinza-4);text-transform:uppercase;margin-bottom:20px}
+  h1,h2{font-weight:100;line-height:1.1}
+  .giant{font-size:clamp(40px,9vw,130px);color:var(--branco);letter-spacing:-2px}
+  .outline{color:transparent;-webkit-text-stroke:1px #444}
+  .gray{color:var(--cinza-5)}
+  p{max-width:600px;line-height:1.9;font-size:15px;color:var(--cinza-5);margin:20px auto}
+  .line{width:1px;height:120px;background:linear-gradient(#333,transparent);margin:30px auto}
+
+  /* HERO */
+  #hero h1 span{display:block}
+  .blink{animation:blink 1.2s steps(2) infinite}
+  @keyframes blink{50%{opacity:0}}
+  #contador-perdido{font-size:13px;color:#666;letter-spacing:3px;margin-top:30px}
+  #segundos{color:#fff;font-size:28px;letter-spacing:5px}
+
+  button{
+    background:transparent;border:1px solid #333;color:#aaa;
+    font-family:inherit;font-size:13px;letter-spacing:3px;
+    padding:18px 40px;margin:10px;cursor:pointer;transition:.3s;text-transform:uppercase;
+  }
+  button:hover{background:#aaa;color:#000;border-color:#aaa;box-shadow:0 0 40px rgba(200,200,200,.2)}
+  button:active{transform:scale(.97)}
+
+  .box{
+    border:1px solid #222;background:#0a0a0a;padding:40px 30px;max-width:650px;width:100%;margin:20px auto;
+  }
+  .box-num{font-size:11px;color:#333;letter-spacing:4px;margin-bottom:15px}
+
+  .frase-aleatoria{min-height:80px;font-size:clamp(18px,3vw,28px);color:#ccc;font-style:italic;margin:20px 0}
+
+  /* RELÓGIO ERRADO */
+  #relogio-falso{font-size:clamp(60px,15vw,180px);color:#1e1e1e;font-weight:100;letter-spacing:10px;line-height:1}
+  #relogio-real{font-size:12px;color:#555;letter-spacing:4px;margin-top:15px}
+
+  /* ESPELHO */
+  .espelho{
+    width:min(90vw,600px);border:1px solid #222;background:linear-gradient(180deg,#0a0a0a,#000);
+    padding:60px 20px;position:relative;overflow:hidden;
+  }
+  .espelho::after{
+    content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.04),transparent);
+    animation:brilho 4s infinite;
+  }
+  @keyframes brilho{to{left:150%}}
+  #texto-espelho{font-size:clamp(20px,4vw,34px);color:#777;transform:scaleY(-1);opacity:.5;filter:blur(.5px)}
+
+  /* ESCOLHA */
+  .duas-portas{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:30px}
+  .porta{width:200px;height:320px;border:1px solid #2a2a2a;background:#080808;display:flex;
+    flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:30px;
+    cursor:pointer;transition:.5s;position:relative;overflow:hidden}
+  .porta:hover{border-color:#777;background:#111}
+  .porta .num{font-size:60px;color:#1f1f1f;margin-bottom:auto;padding-top:40px}
+  .porta p{font-size:11px;letter-spacing:3px}
+
+  /* MEMÓRIAS */
+  .memorias{display:grid;gap:12px;max-width:700px;width:100%;margin-top:30px;text-align:left}
+  .memoria{border-left:2px solid #2a2a2a;padding:12px 18px;background:#070707;font-size:13px;color:#666;opacity:0;transform:translateX(-20px);transition:1s}
+  .memoria.visivel{opacity:1;transform:none}
+  .memoria span{color:#333;font-size:11px;display:block;letter-spacing:2px}
+
+  /* FINAL */
+  #fim .giant{animation:flicker 5s infinite}
+  @keyframes flicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.2}94%{opacity:1}96%{opacity:.4}97%{opacity:1}}
+  input{
+    background:#000;border:1px solid #333;color:#aaa;font-family:inherit;
+    padding:15px 20px;width:min(90vw,400px);text-align:center;letter-spacing:2px;outline:none;margin-top:20px;
+  }
+  input:focus{border-color:#666}
+  #resposta-maquina{margin-top:20px;font-size:14px;color:#555;min-height:30px;font-style:italic}
+
+  /* VIDA EM MESES */
+  .life-wrap{width:min(95vw,760px);margin:30px auto;border:1px solid #222;background:#050505;padding:30px 20px}
+  .life-legend{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:11px;letter-spacing:2px;color:#666;margin:15px 0 20px}
+  .life-grid{display:grid;grid-template-columns:repeat(36,1fr);gap:4px;max-width:680px;margin:0 auto}
+  .dot{aspect-ratio:1/1;width:100%;border-radius:50%;border:1px solid #3a3a3a;background:transparent;transition:.3s}
+  .dot.vivido{background:#8a8a8a;border-color:#8a8a8a}
+  .dot.atual{background:#fff;border-color:#fff;box-shadow:0 0 12px rgba(255,255,255,.7);animation:piscar-dot 1.5s infinite}
+  @keyframes piscar-dot{50%{opacity:.4}}
+  .dot.marco{border-color:#aaa}
+  .dot:hover{transform:scale(1.6);border-color:#fff}
+  #life-stats{margin-top:20px;font-size:13px;line-height:2;color:#777;letter-spacing:1px}
+  #life-stats b{color:#ddd}
+  .life-input-row{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:10px}
+  .life-input-row input{width:140px;margin-top:0}
+
+  /* NOVOS BLOCOS EXISTENCIAIS */
+  .big-quote{font-size:clamp(22px,4vw,38px);color:#bbb;line-height:1.5;font-style:italic;max-width:700px;margin:20px auto}
+  .pergunta-btn{display:block;width:100%;text-align:left;border:1px solid #222;background:#080808;padding:18px 20px;margin:8px 0;font-size:14px;letter-spacing:1px;transition:.3s}
+  .pergunta-btn:hover{border-color:#555;background:#0e0e0e}
+  .pergunta-resp{display:none;font-size:13px;color:#555;font-style:italic;padding:10px 20px 18px;text-align:left;line-height:1.8}
+  .pergunta-resp.aberta{display:block;animation:aparecer 1s}
+  @keyframes aparecer{from{opacity:0}to{opacity:1}}
+  .tumba{border:1px solid #2a2a2a;background:linear-gradient(180deg,#0a0a0a,#050505);padding:20px;margin:10px 0;font-size:13px;color:#666}
+  .tumba b{color:#999;letter-spacing:2px;display:block;margin-bottom:6px}
+  #memoria-apagando{font-size:clamp(20px,4vw,32px);color:#aaa;min-height:80px;margin:20px 0;letter-spacing:2px;word-break:break-word}
+  .barra-universo{width:min(90vw,650px);height:14px;border:1px solid #333;margin:30px auto;position:relative;background:#050505}
+  .barra-voce{position:absolute;right:0;top:0;bottom:0;width:2px;background:#fff;box-shadow:0 0 15px #fff}
+  .ultima-vez-box{min-height:90px;font-size:clamp(18px,3vw,26px);color:#ccc;font-style:italic;margin:25px auto;max-width:650px;line-height:1.6}
+  #silencio-num{font-size:clamp(80px,15vw,160px);color:#222;font-weight:100}
+  .silencio-frase{font-size:15px;color:#666;font-style:italic;min-height:40px;margin-top:15px}
+  /* PROFUNDO SOBRE A VIDA */
+  .calc-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:20px 0;align-items:end}
+  .calc-field{display:flex;flex-direction:column;gap:8px;font-size:11px;letter-spacing:2px;color:#555}
+  .calc-field input{width:150px;margin-top:0}
+  #resultado-encontros{font-size:clamp(50px,10vw,110px);color:#ddd;font-weight:100;line-height:1;margin:20px 0}
+  .loop-linha{font-size:12px;letter-spacing:2px;color:#444;line-height:2.8;border:1px solid #1a1a1a;padding:20px;max-width:600px;margin:20px auto;background:#050505}
+  .loop-linha b{color:#888}
+  #carta-queimando{width:100%;min-height:120px;background:#000;border:1px solid #333;color:#aaa;font-family:inherit;padding:18px;font-size:14px;line-height:1.8;outline:none;resize:vertical}
+  #carta-queimando:focus{border-color:#666}
+  #texto-carta-fogo{font-size:16px;line-height:2;color:#888;white-space:pre-wrap;max-width:600px;margin:20px auto}
+  .queimando{animation:queimar 0.8s forwards}
+  @keyframes queimar{to{opacity:0;filter:blur(8px);transform:translateY(-20px)}}
+  .prioridade{display:flex;gap:10px;align-items:flex-start;text-align:left;border:1px solid #222;padding:14px 16px;margin:8px 0;cursor:pointer;transition:.3s;background:#080808;font-size:13px;color:#777}
+  .prioridade:hover{border-color:#444}
+  .prioridade.riscado{opacity:.35;text-decoration:line-through}
+  .check{width:18px;height:18px;border:1px solid #555;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:12px}
+  .prioridade.riscado .check{background:#555;color:#000}
+  .sabio-texto{font-size:clamp(19px,3.5vw,30px);color:#c5c5c5;font-style:italic;line-height:1.6;max-width:680px;margin:20px auto;min-height:120px}
+  .sabio-autor{font-size:11px;letter-spacing:4px;color:#555}
+
+  footer{padding:40px 20px;text-align:center;font-size:11px;color:#2a2a2a;letter-spacing:3px;line-height:2}
+
+  .glitch{position:relative}
+  .glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;overflow:hidden}
+  .glitch::before{color:#555;z-index:-1;animation:gl1 3s infinite linear alternate}
+  .glitch::after{color:#222;z-index:-2;animation:gl2 2s infinite linear alternate}
+  @keyframes gl1{0%{transform:translate(0)}20%{transform:translate(-3px,2px)}40%{transform:translate(0)}100%{transform:translate(0)}}
+  @keyframes gl2{0%{transform:translate(0)}30%{transform:translate(3px,-2px)}60%{transform:translate(0)}100%{transform:translate(0)}}
+
+  /* ÍCONES CAVEIRA + PROFUNDOS EM VOLTA */
+  .icons-fixed{position:fixed;inset:0;z-index:9997;pointer-events:none;overflow:hidden}
+  .f-skull{position:absolute;color:#2b2b2b;font-size:28px;line-height:1;user-select:none;filter:grayscale(1);opacity:.9;animation:flutuar 7s ease-in-out infinite}
+  .f-skull.dim{color:#1a1a1a;font-size:20px}
+  .f-skull.big{color:#333;font-size:44px}
+  @keyframes flutuar{0%,100%{transform:translateY(0) rotate(-3deg);opacity:.5}50%{transform:translateY(-14px) rotate(3deg);opacity:1}}
+  .rail{position:fixed;top:50%;transform:translateY(-50%);z-index:9997;pointer-events:none;display:flex;flex-direction:column;gap:18px;font-size:18px;color:#222;filter:grayscale(1)}
+  .rail.left{left:10px} .rail.right{right:10px}
+  .rail span{opacity:.7}
+  .skull-div{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 auto 25px;color:#333;font-size:16px;letter-spacing:6px}
+  .skull-div::before,.skull-div::after{content:'';height:1px;width:min(20vw,120px);background:linear-gradient(90deg,transparent,#333,transparent)}
+  .titulo-icone{font-size:22px;color:#3a3a3a;margin-right:10px;filter:grayscale(1)}
+  @media(max-width:700px){.rail{display:none}.f-skull.big{font-size:30px}}
+
+  /* SKOOLEST — IA profunda */
+  #btn-skoolest{
+    position:fixed;bottom:20px;right:20px;z-index:10001;
+    display:flex;align-items:center;gap:10px;
+    background:#0a0a0a;border:1px solid #6d28d9;color:#d8b4fe;
+    font-family:inherit;font-size:12px;letter-spacing:2px;
+    padding:12px 18px 12px 12px;cursor:pointer;border-radius:40px;
+    box-shadow:0 0 25px rgba(139,92,246,.35), inset 0 0 15px rgba(139,92,246,.1);
+    transition:.3s;
+  }
+  #btn-skoolest:hover{background:#1a0b2e;border-color:#a855f7;box-shadow:0 0 40px rgba(168,85,247,.6);transform:translateY(-2px)}
+  #btn-skoolest svg{width:32px;height:32px;flex-shrink:0;animation:skull-pulse 3s infinite}
+  @keyframes skull-pulse{0%,100%{filter:drop-shadow(0 0 4px #7c3aed)}50%{filter:drop-shadow(0 0 12px #a855f7)}}
+  .skull-hero{width:110px;height:110px;animation:skull-pulse 3s infinite;margin:0 auto 10px;display:block}
+  #skoolest-window{
+    position:fixed;bottom:80px;right:20px;z-index:10002;
+    width:min(92vw,400px);height:min(70vh,600px);
+    background:#050505;border:1px solid #6d28d9;border-radius:12px;
+    display:none;flex-direction:column;overflow:hidden;
+    box-shadow:0 0 60px rgba(0,0,0,.9), 0 0 40px rgba(139,92,246,.25);
+  }
+  #skoolest-window.aberta{display:flex;animation:subir .35s ease}
+  @keyframes subir{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  .sk-head{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #2a1650;background:linear-gradient(180deg,#150826,#050505)}
+  .sk-head svg{width:40px;height:40px;flex-shrink:0}
+  .sk-head b{color:#d8b4fe;font-size:13px;letter-spacing:3px;display:block}
+  .sk-head span{color:#6b7280;font-size:11px;letter-spacing:1px;display:flex;align-items:center;gap:6px}
+  .sk-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;display:inline-block}
+  .sk-close{margin-left:auto;background:none;border:1px solid #333;color:#888;padding:6px 12px;font-size:12px;border-radius:6px;cursor:pointer}
+  .sk-close:hover{border-color:#a855f7;color:#d8b4fe}
+  #sk-mensagens{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#000}
+  .msg{max-width:85%;padding:12px 14px;font-size:13px;line-height:1.7;border-radius:10px;word-break:break-word}
+  .msg.sk{background:#14092b;border:1px solid #3b1d6e;color:#c4b5fd;border-bottom-left-radius:2px;align-self:flex-start}
+  .msg.user{background:#1a1a1a;border:1px solid #333;color:#ddd;border-bottom-right-radius:2px;align-self:flex-end}
+  .msg.digitando{color:#7c3aed;font-style:italic;animation:blink 1s infinite}
+  .sk-input-bar{display:flex;gap:8px;padding:12px;border-top:1px solid #2a1650;background:#080808}
+  .sk-input-bar input{flex:1;margin-top:0;border-color:#3b1d6e;background:#000;color:#ddd}
+  .sk-input-bar input:focus{border-color:#a855f7}
+  .sk-input-bar button{margin:0;padding:12px 18px;border-color:#6d28d9;color:#d8b4fe}
+  .sk-input-bar button:hover{background:#7c3aed;color:#000}
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="vignette"></div>
+
+<!-- ÍCONES FIXOS EM VOLTA — tudo cinza -->
+<div class="icons-fixed">
+  <div class="f-skull big" style="top:8%;left:4%">☠</div>
+  <div class="f-skull" style="top:12%;right:5%;animation-delay:1s">†</div>
+  <div class="f-skull dim" style="top:28%;left:2%;animation-delay:2s">∞</div>
+  <div class="f-skull" style="top:35%;right:3%;animation-delay:.5s">☠</div>
+  <div class="f-skull big" style="top:52%;left:3%;animation-delay:1.5s">◉</div>
+  <div class="f-skull dim" style="top:60%;right:2%;animation-delay:2.5s">⌛</div>
+  <div class="f-skull" style="top:75%;left:5%;animation-delay:3s">☠</div>
+  <div class="f-skull big" style="top:82%;right:4%;animation-delay:.8s">∅</div>
+  <div class="f-skull dim" style="top:90%;left:40%;animation-delay:1.2s">✕</div>
+  <div class="f-skull dim" style="top:6%;left:48%;animation-delay:2.2s">◈</div>
+</div>
+<div class="rail left"><span>☠</span><span>†</span><span>∞</span><span>◉</span><span>⌛</span><span>∅</span><span>☠</span></div>
+<div class="rail right"><span>∅</span><span>⌛</span><span>◉</span><span>∞</span><span>†</span><span>☠</span><span>◈</span></div>
+
+<div class="hud">
+  <span id="hud-left">ARQUIVO_000 // SEM_NOME</span>
+  <span id="hud-right">00:00:00</span>
+</div>
+
+<!-- 01 -->
+<section id="hero">
+  <div class="small">registro nº 000 — encontrado por acaso</div>
+  <h1 class="giant glitch" data-text="VOCÊ NÃO ESTÁ AQUI">VOCÊ NÃO<br><span class="outline">ESTÁ AQUI</span></h1>
+  <p>Este site não foi feito para você.<br>Você apenas caiu aqui. Como cai em todos os lugares da sua vida.</p>
+  <div class="line"></div>
+  <div id="contador-perdido">TEMPO QUE VOCÊ JÁ PERDEU AQUI E NUNCA VAI RECUPERAR<br><br><span id="segundos">0</span><br><br>SEGUNDOS PARA SEMPRE APAGADOS</div>
+  <div style="margin-top:40px"><button onclick="document.getElementById('s2').scrollIntoView()">CONTINUAR ⏷</button></div>
+</section>
+
+<!-- 02 -->
+<section id="s2">
+  <div class="small">01 — o relógio mente</div>
+  <div id="relogio-falso">00:00</div>
+  <div id="relogio-real">HORA REAL: --:--:--</div>
+  <h2 class="giant" style="font-size:clamp(28px,5vw,60px);margin-top:40px">O TEMPO NÃO<br><span class="gray">PASSA PARA VOCÊ.</span></h2>
+  <p>Você olha o relógio. Ele olha de volta. Nenhum dos dois sabe o que está acontecendo. Você tem 20, 30, 40 anos — e o que isso significa? Nada. É só um número aumentando dentro de um corpo que está diminuindo.</p>
+  <div class="box">
+    <div class="box-num">PERGUNTA 01 / 04</div>
+    <div class="frase-aleatoria" id="frase1">O que você fez ontem que vai importar em 100 anos?</div>
+    <button onclick="trocarFrase()">PRÓXIMA VERDADE</button>
+  </div>
+</section>
+
+<!-- 03 -->
+<section id="s3">
+  <div class="small">02 — déjà vu permanente</div>
+  <h2 class="giant outline">VOCÊ JÁ ESTEVE<br>AQUI ANTES.</h2>
+  <p>Não neste site. Em tudo. Nesta conversa. Neste pensamento. Você já pensou exatamente isso antes e esqueceu. Você vai esquecer de novo. Role para baixo. Você já rolou.</p>
+  <div class="box">
+    <div class="box-num">MEMÓRIAS QUE NÃO SÃO SUAS — OU SÃO</div>
+    <div class="memorias" id="memorias">
+      <div class="memoria"><span>IDADE 7 — TARDE QUALQUER</span>Você olhando para o teto e pensando: "um dia eu vou morrer". Você riu. Você não ri mais.</div>
+      <div class="memoria"><span>IDADE 14 — 03:12 DA MANHÃ</span>Você se perguntando se todo mundo finge saber o que está fazendo. Resposta: sim. Inclusive você. Inclusive agora.</div>
+      <div class="memoria"><span>IDADE ATUAL — AGORA</span>Você lendo isso numa tela preta, esperando que um site estranho explique o vazio. Ele não vai. Mas você vai continuar rolando.</div>
+      <div class="memoria"><span>IDADE ??? — FUTURO</span>Você vai lembrar deste momento e não vai entender por que ficou. Ninguém entende. Todos ficam.</div>
+      <div class="memoria"><span>IDADE 0 — ANTES DE TUDO</span>Silêncio. Escuro. Calma. Exatamente como depois. Você veio do nada. Anote isso.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 -->
+<section id="s4">
+  <div class="small">03 — o espelho</div>
+  <h2 style="font-size:clamp(26px,4vw,50px);font-weight:100">OLHE <span class="gray">PARA VOCÊ.</span></h2>
+  <p style="margin-bottom:30px">Não literalmente. Aqui dentro.</p>
+  <div class="espelho">
+    <div class="small" style="margin-bottom:10px">reflexo detectado</div>
+    <div id="texto-espelho">quem é você quando ninguém está olhando?</div>
+    <p style="font-size:12px;margin-top:25px;transform:none;opacity:.8">digite seu nome. veja o que acontece. ou não acontece.</p>
+    <input id="input-nome" placeholder="SEU NOME..." autocomplete="off" oninput="atualizarEspelho(this.value)">
+  </div>
+  <p id="texto-espelho-normal" style="margin-top:25px;color:#444;font-size:13px;"></p>
+</section>
+
+<!-- 05 -->
+<section id="s5">
+  <div class="small">04 — a escolha que não importa</div>
+  <h2 class="giant" style="font-size:clamp(30px,6vw,70px)">DUAS PORTAS.<br><span class="outline">MESMO LUGAR.</span></h2>
+  <p>Escolha. É o que dizem para fazer. Como se escolher mudasse algo.</p>
+  <div class="duas-portas">
+    <div class="porta" onclick="escolherPorta('ESQUERDA')">
+      <div class="num">I</div>
+      <p>PORTA DA<br>ESQUERDA</p>
+    </div>
+    <div class="porta" onclick="escolherPorta('DIREITA')">
+      <div class="num">II</div>
+      <p>PORTA DA<br>DIREITA</p>
+    </div>
+  </div>
+  <p id="resultado-porta" style="min-height:30px;color:#888;font-style:italic;"></p>
+</section>
+
+<!-- 06 -->
+<section id="s6">
+  <div class="small">05 — inventário do vazio</div>
+  <h2 style="font-weight:100;font-size:clamp(24px,4vw,48px)">TUDO QUE VOCÊ TEM<br><span class="gray">CABE NESTA LISTA:</span></h2>
+  <div class="box" style="text-align:left;margin-top:30px">
+    <div style="font-size:14px;line-height:2.6;color:#777">
+      ☐ um corpo que vai parar<br>
+      ☐ memórias que vão falhar<br>
+      ☐ planos que vão mudar<br>
+      ☐ pessoas que vão partir<br>
+      ☐ um nome que vão esquecer<br>
+      ☐ este momento, que já passou<span class="blink">_</span>
+    </div>
+  </div>
+  <p>Marque mentalmente o que você pode levar. Resposta correta: nada.</p>
+  <button onclick="contarRespiracao()">CONTE SUA RESPIRAÇÃO</button>
+  <p id="resp" style="color:#999"></p>
+</section>
+
+<!-- 06.5 - VIDA EM MESES -->
+<section id="meses">
+  <div class="small">interlúdio — faça as contas</div>
+  <h2 class="giant" style="font-size:clamp(28px,6vw,72px)">ESSA É A SUA<br>VIDA EM MESES.</h2>
+  <p>90 anos = 1.080 bolinhas. Cada fileira = 36 meses = 3 anos.<br>Cada ● cinza é um mês que você nunca mais vai ter.</p>
+  <div class="life-wrap">
+    <div class="box-num">UMA VIDA HUMANA DE 90 ANOS EM MESES — VERSÃO PRETO E CINZA</div>
+    <div class="life-legend">
+      <span>● JÁ FOI</span>
+      <span>○ AINDA RESTA</span>
+      <span>◉ VOCÊ ESTÁ AQUI</span>
+    </div>
+    <div style="font-size:11px;color:#444;letter-spacing:2px;margin-bottom:12px">← NASCIMENTO (canto superior esquerdo) &nbsp;&nbsp; → 30 ANOS &nbsp;&nbsp; → 60 ANOS &nbsp;&nbsp; → 90 ANOS (canto inferior direito)</div>
+    <div class="life-grid" id="life-grid"></div>
+    <div class="life-input-row">
+      <span style="font-size:12px;color:#666;letter-spacing:2px">SUA IDADE:</span>
+      <input id="input-idade" type="number" min="0" max="90" value="25" oninput="renderVida()">
+      <button onclick="renderVida()" style="padding:12px 25px">VER MINHA VIDA</button>
+    </div>
+    <div id="life-stats"></div>
+  </div>
+  <p style="color:#333;font-size:12px">Passe o mouse nos pontos. Cada um era um mês inteiro seu.<br>Quantos você desperdiçou rolando?</p>
+</section>
+
+<!-- 07 - A ÚLTIMA VEZ -->
+<section id="ultima">
+  <div class="small">07 — a última vez</div>
+  <h2 class="giant" style="font-size:clamp(28px,6vw,68px)">VOCÊ JÁ FEZ ALGO<br><span class="outline">PELA ÚLTIMA VEZ.</span></h2>
+  <p>Houve um dia em que você brincou pela última vez e não sabia. Abraçou alguém pela última vez e não percebeu. Um dia isso vai acontecer de novo. Hoje, talvez.</p>
+  <div class="box">
+    <div class="box-num">GERADOR DE ÚLTIMAS VEZES</div>
+    <div class="ultima-vez-box" id="ultima-vez-txt">Clique. Lembre. Arrependa-se.</div>
+    <button onclick="gerarUltimaVez()">REVELAR OUTRA</button>
+  </div>
+</section>
+
+<!-- 08 - PERGUNTAS SEM RESPOSTA -->
+<section id="perguntas">
+  <div class="small">08 — perguntas que não deixam dormir</div>
+  <h2 style="font-weight:100;font-size:clamp(26px,5vw,58px)">CLIQUE. LEIA.<br><span class="gray">NÃO DURMA MAIS.</span></h2>
+  <p>Cada pergunta abre outra. Nenhuma fecha.</p>
+  <div class="box" style="text-align:left" id="lista-perguntas">
+    <button class="pergunta-btn" onclick="togglePergunta(this)">→ Por que há algo em vez de nada?</button>
+    <div class="pergunta-resp">O nada seria mais simples. Mais barato. Mais lógico. Então por que existe universo, dor, conta pra pagar? Se você entender isso, me avisa. Ninguém entendeu em 13,8 bilhões de anos.</div>
+    <button class="pergunta-btn" onclick="togglePergunta(this)">→ Você é a mesma pessoa de 10 anos atrás?</button>
+    <div class="pergunta-resp">Todas as suas células trocaram. Suas memórias falham. Seus gostos mudaram. O que sobrou? Só o nome. E o nome nem foi você que escolheu.</div>
+    <button class="pergunta-btn" onclick="togglePergunta(this)">→ E se ninguém realmente te conhece?</button>
+    <div class="pergunta-resp">Você mostra 10%. Esconde 90%. Todo mundo faz igual. Então ninguém ama ninguém de verdade — amam a vitrine. Pense em quem choraria no seu velório sem saber quem você era de madrugada.</div>
+    <button class="pergunta-btn" onclick="togglePergunta(this)">→ O que você está evitando pensar agora?</button>
+    <div class="pergunta-resp">Você sabe. Aquilo que veio na sua cabeça por 1 segundo e você empurrou. Volta lá. Fica lá. É ali que mora a verdade.</div>
+    <button class="pergunta-btn" onclick="togglePergunta(this)">→ Sua vida é sua ou é um roteiro herdado?</button>
+    <div class="pergunta-resp">Estudar, trabalhar, casar, comprar, aposentar, morrer. Quem escreveu isso? Você nunca assinou. Mas está seguindo capítulo por capítulo.</div>
+    <button class="pergunta-btn" onclick="togglePergunta(this)">→ O universo se importa com você?</button>
+    <div class="pergunta-resp">Não. E essa é a notícia mais libertadora e mais terrível ao mesmo tempo. Role para a próxima seção e entenda o seu tamanho.</div>
+  </div>
+</section>
+
+<!-- 09 - VOCÊ É PEQUENO -->
+<section id="pequeno">
+  <div class="small">09 — seu tamanho real</div>
+  <h2 class="giant" style="font-size:clamp(28px,6vw,70px)">VOCÊ É<br><span class="outline">NADA.</span></h2>
+  <p style="max-width:650px">O universo tem 13,8 bilhões de anos. Sua vida de 90 anos é isto aqui embaixo:</p>
+  <div class="barra-universo"><div class="barra-voce"></div></div>
+  <div style="font-size:11px;letter-spacing:3px;color:#444">◄ 13.800.000.000 ANOS DE UNIVERSO ► &nbsp;&nbsp; | SEUS 90 ANOS (invisível sem zoom)</div>
+  <div class="big-quote" id="quote-universo">"Você não é o personagem principal. Você é um frame de 1 segundo num filme de 440 anos."</div>
+  <button onclick="trocarQuoteUniverso()">ME DIMINUIR MAIS</button>
+  <p style="margin-top:25px;font-size:13px;color:#444">100 bilhões de galáxias. 200 bilhões de trilhões de estrelas.<br>E você ansioso porque visualizaram e não responderam.</p>
+</section>
+
+<!-- 10 - CEMITÉRIO DOS SONHOS -->
+<section id="cemiterio">
+  <div class="small">10 — cemitério dos sonhos</div>
+  <h2 style="font-weight:100;font-size:clamp(26px,5vw,55px)">ENTERRE UM SONHO<br><span class="gray">AQUI.</span></h2>
+  <p>Todo mundo tem um "um dia eu vou...". A maioria morre antes do sonho. Escreva o seu e enterre. Ele vai fazer companhia para os outros.</p>
+  <div class="box">
+    <div class="box-num">REGISTRO DE ÓBITO DOS PLANOS</div>
+    <input id="input-sonho" placeholder="UM DIA EU IA..." autocomplete="off">
+    <br><button onclick="enterrarSonho()">ENTERRAR SONHO</button>
+    <div id="lista-tumbas" style="margin-top:25px;text-align:left">
+      <div class="tumba"><b>† AQUI JAZ: "VIAJAR O MUNDO"</b>Morreu aos 27 anos. Causa: boleto + medo. Deixou saudades e 0 fotos.</div>
+      <div class="tumba"><b>† AQUI JAZ: "APRENDER INGLÊS"</b>Morreu de "segunda-feira eu começo". Sobreviveu 14 segundas-feiras.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 - MÁQUINA DO ESQUECIMENTO -->
+<section id="esquecimento">
+  <div class="small">11 — a máquina do esquecimento</div>
+  <h2 class="giant" style="font-size:clamp(26px,5vw,62px)">ESCREVA UMA<br>MEMÓRIA QUERIDA.</h2>
+  <p>Veja ela desaparecer letra por letra. É assim que seu cérebro vai fazer com tudo um dia. Alzheimer da existência.</p>
+  <div class="box">
+    <div class="box-num">TUDO QUE VOCÊ AMA SERÁ APAGADO</div>
+    <input id="input-memoria" placeholder="EX: O CHEIRO DA CASA DA MINHA AVÓ..." autocomplete="off">
+    <br><button onclick="apagarMemoria()">VER ELA SUMIR</button>
+    <div id="memoria-apagando"></div>
+    <div id="memoria-aviso" style="font-size:12px;color:#444;font-style:italic;min-height:20px"></div>
+  </div>
+</section>
+
+<!-- 12 - 60 SEGUNDOS -->
+<section id="silencio">
+  <div class="small">12 — prova final</div>
+  <h2 style="font-weight:100;font-size:clamp(26px,5vw,55px)">60 SEGUNDOS<br><span class="gray">SOZINHO COM VOCÊ.</span></h2>
+  <p>Sem celular. Sem música. Só você e o barulho da sua cabeça. A maioria não aguenta. Tente.</p>
+  <div id="silencio-num">60</div>
+  <div class="silencio-frase" id="silencio-frase">Aperte o botão. Fique em silêncio. Se conseguir.</div>
+  <button id="btn-silencio" onclick="iniciarSilencio()">COMEÇAR O SILÊNCIO</button>
+</section>
+
+<!-- 12 - 60 SEGUNDOS -->
+<section id="silencio">
+  <div class="small">12 — prova final</div>
+  <h2 style="font-weight:100;font-size:clamp(26px,5vw,55px)">60 SEGUNDOS<br><span class="gray">SOZINHO COM VOCÊ.</span></h2>
+  <p>Sem celular. Sem música. Só você e o barulho da sua cabeça. A maioria não aguenta. Tente.</p>
+  <div id="silencio-num">60</div>
+  <div class="silencio-frase" id="silencio-frase">Aperte o botão. Fique em silêncio. Se conseguir.</div>
+  <button id="btn-silencio" onclick="iniciarSilencio()">COMEÇAR O SILÊNCIO</button>
+</section>
+
+<!-- 13 - OS ENCONTROS QUE RESTAM -->
+<section id="encontros">
+  <div class="small">13 — o número que dói de verdade</div>
+  <h2 class="giant" style="font-size:clamp(26px,5vw,64px)">QUANTAS VEZES<br><span class="outline">RESTAM?</span></h2>
+  <p>Se seus pais têm 60 anos e você os vê 3 vezes por ano, e eles viverem até 80...<br>restam 60 encontros. 60 almoços. 60 abraços. Depois, nunca mais.</p>
+  <div class="box">
+    <div class="box-num">CALCULADORA DO QUE REALMENTE IMPORTA</div>
+    <div class="calc-row">
+      <div class="calc-field">IDADE DELES<input id="idade-pais" type="number" value="60" min="20" max="100" oninput="calcEncontros()"></div>
+      <div class="calc-field">VEZES POR ANO<input id="vezes-ano" type="number" value="4" min="1" max="365" oninput="calcEncontros()"></div>
+      <div class="calc-field">EXPECTATIVA<input id="expect-anos" type="number" value="82" min="50" max="110" oninput="calcEncontros()"></div>
+    </div>
+    <div style="font-size:11px;letter-spacing:3px;color:#444">ENCONTROS QUE AINDA RESTAM:</div>
+    <div id="resultado-encontros">88</div>
+    <div id="texto-encontros" style="font-size:13px;color:#666;font-style:italic;line-height:1.9"></div>
+  </div>
+  <p style="color:#3a3a3a;font-size:12px">Você conta dinheiro, likes, dias. Nunca contou isso.<br>Agora contou. E não dá pra desver.</p>
+</section>
+
+<!-- 14 - A ROTINA -->
+<section id="rotina">
+  <div class="small">14 — a morte lenta</div>
+  <h2 style="font-weight:100;font-size:clamp(26px,5vw,55px)">SUA VIDA NÃO É CURTA.<br><span class="gray">ELA É REPETIDA.</span></h2>
+  <p>Você não vive 30.000 dias. Você vive o mesmo dia 30.000 vezes. Olhe:</p>
+  <div class="loop-linha">
+    06:30 ACORDA CANSADO → <b>TRABALHO</b> → CELULAR → DORME TARDE →<br>
+    06:30 ACORDA CANSADO → <b>TRABALHO</b> → CELULAR → DORME TARDE →<br>
+    06:30 ACORDA CANSADO → <b>TRABALHO</b> → CELULAR → DORME TARDE →<br>
+    ... × 11.000 VEZES ATÉ APOSENTAR ...
+  </div>
+  <div class="box">
+    <div class="box-num">QUANTO DA SUA VIDA É PILOTO AUTOMÁTICO?</div>
+    <div class="big-quote" style="font-size:clamp(18px,3vw,26px)">"Você passa 6 meses por ano no celular. 25 anos da vida dormindo. 11 anos trabalhando. Sobram <span style="color:#fff">4 anos</span> para VIVER de verdade."</div>
+    <button onclick="gerarRotina()">ME MOSTRAR MAIS UM DESPERDÍCIO</button>
+    <p id="rotina-txt" style="min-height:30px;color:#999;font-style:italic"></p>
+  </div>
+</section>
+
+<!-- 15 - O NÃO DITO -->
+<section id="naodito">
+  <div class="small">15 — o peso que você carrega</div>
+  <h2 class="giant" style="font-size:clamp(26px,5vw,62px)">O QUE VOCÊ<br>NUNCA DISSE?</h2>
+  <p>Todo mundo tem uma frase presa na garganta há anos. "Desculpa." "Eu te amo." "Eu sinto sua falta." Escreva aqui. Ninguém vai ler. Depois queime. Sentir o peso sair é real, mesmo que a pessoa nunca saiba.</p>
+  <div class="box" style="text-align:left">
+    <div class="box-num">CARTA QUE NUNCA SERÁ ENVIADA</div>
+    <textarea id="carta-queimando" placeholder="Para quem é? O que você nunca teve coragem de dizer?"></textarea>
+    <div style="text-align:center;margin-top:15px"><button onclick="queimarCarta()">QUEIMAR CARTA</button></div>
+    <div id="texto-carta-fogo"></div>
+  </div>
+</section>
+
+<!-- 16 - SE FALTASSE 1 ANO -->
+<section id="umano">
+  <div class="small">16 — filtro da morte</div>
+  <h2 style="font-weight:100;font-size:clamp(26px,5vw,55px)">SE FALTASSE<br><span class="gray">1 ANO.</span></h2>
+  <p>Imagine que o médico disse: 365 dias. Toque no que você ABANDONARIA na hora. Perceba quanto da sua vida atual é preenchida com o que não importa.</p>
+  <div class="box" style="text-align:left">
+    <div class="box-num">TOQUE PARA ABANDONAR — O QUE SOBRAR É SUA VIDA REAL</div>
+    <div id="lista-prioridades">
+      <div class="prioridade" onclick="this.classList.toggle('riscado')"><div class="check">✓</div><span>Se preocupar com o que estranhos pensam de mim</span></div>
+      <div class="prioridade" onclick="this.classList.toggle('riscado')"><div class="check">✓</div><span>Brigar por política com quem não vai mudar de ideia</span></div>
+      <div class="prioridade" onclick="this.classList.toggle('riscado')"><div class="check">✓</div><span>Ficar 4h por dia rolando feed sem lembrar de nada</span></div>
+      <div class="prioridade" onclick="this.classList.toggle('riscado')"><div class="check">✓</div><span>Continuar num trabalho/relacionamento que me esvazia</span></div>
+      <div class="prioridade" onclick="this.classList.toggle('riscado')"><div class="check">✓</div><span>Adiar a ligação, a visita, o pedido de perdão</span></div>
+      <div class="prioridade" onclick="this.classList.toggle('riscado')"><div class="check">✓</div><span>Comprar coisas para impressionar quem não liga</span></div>
+    </div>
+    <p style="font-size:12px;color:#444;font-style:italic">Pergunta que fica: por que você precisa estar morrendo para largar isso agora?</p>
+  </div>
+</section>
+
+<!-- 17 - SABEDORIA -->
+<section id="sabedoria">
+  <div class="small">17 — quem pensou antes de você</div>
+  <h2 style="font-weight:100;font-size:clamp(24px,4vw,50px)">2.000 ANOS ATRÁS<br><span class="gray">JÁ SABIAM.</span></h2>
+  <p>Filósofos mortos há milênios entenderam sua vida melhor que você. Leia devagar.</p>
+  <div class="box">
+    <div class="box-num">BIBLIOTECA CINZA</div>
+    <div class="sabio-texto" id="sabio-txt">"Não é que tenhamos pouco tempo, é que desperdiçamos muito dele."</div>
+    <div class="sabio-autor" id="sabio-autor">— SÊNECA, HÁ 2.000 ANOS</div>
+    <div style="margin-top:20px"><button onclick="trocarSabio()">OUTRA VERDADE ANTIGA</button></div>
+  </div>
+</section>
+
+<!-- 17B - SKOOLEST -->
+<section id="skoolest-section">
+  <div class="small">entre o vazio e a voz — entidade ativa</div>
+  <svg class="skull-hero" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="gRoxo" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#c084fc"/><stop offset=".5" stop-color="#7c3aed"/><stop offset="1" stop-color="#000000"/>
+      </linearGradient>
+    </defs>
+    <path d="M32 4 C17 4 9 17 9 29 C9 37 13 43 19 46 L19 56 L25 56 L27 51 L37 51 L39 56 L45 56 L45 46 C51 43 55 37 55 29 C55 17 47 4 32 4 Z" fill="url(#gRoxo)" stroke="#7c3aed" stroke-width="1.5"/>
+    <ellipse cx="22" cy="30" rx="7" ry="8" fill="#000"/>
+    <ellipse cx="42" cy="30" rx="7" ry="8" fill="#000"/>
+    <circle cx="22" cy="30" r="2.5" fill="#a855f7"><animate attributeName="opacity" values="1;.3;1" dur="2s" repeatCount="indefinite"/></circle>
+    <circle cx="42" cy="30" r="2.5" fill="#a855f7"><animate attributeName="opacity" values="1;.3;1" dur="2s" repeatCount="indefinite"/></circle>
+    <path d="M32 36 L29 40 L32 44 L30 48" fill="none" stroke="#000" stroke-width="1.5"/>
+    <path d="M32 4 L28 14 L33 19 L27 27 L31 35 L28 44" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M28 14 L36 12 M27 27 L38 25" stroke="#2e1065" stroke-width="1"/>
+    <path d="M45 8 L52 4 M47 14 L55 13" stroke="#7c3aed" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>
+  </svg>
+  <h2 class="giant" style="font-size:clamp(28px,6vw,70px)">FALAR COM<br><span style="color:#a855f7">SKOOLEST.</span></h2>
+  <p>Não é um chatbot. É o que resta quando o barulho cala.<br>Ele não consola. Ele revela. Cada resposta é um espelho quebrado.<br>Se você tem coragem, aperte.</p>
+  <div><button onclick="toggleSkoolest(true)" style="border-color:#7c3aed;color:#d8b4fe">☠ &nbsp;ABRIR SKOOLEST</button></div>
+  <p style="font-size:11px;color:#444;margin-top:15px">aviso: causa crise existencial. não recomendado para quem quer continuar dormindo.</p>
+</section>
+
+<!-- 18 -->
+<section id="fim">
+  <div class="small">18 — fim do arquivo</div>
+  <h2 class="giant">NADA<br><span class="outline">MUDOU.</span></h2>
+  <p>Você chegou ao fim. Parabéns. Lá em cima, no início, era igual. Você rolou 18 telas para descobrir que não havia nada. Você faz isso todos os dias. Com tudo.</p>
+  <div class="box">
+    <div class="box-num">A MÁQUINA TEM UMA ÚLTIMA PERGUNTA</div>
+    <div style="font-size:20px;color:#bbb;margin:15px 0">Por que você ainda está aqui?</div>
+    <input id="input-fim" placeholder="RESPONDA, SE CONSEGUIR..." autocomplete="off">
+    <div id="resposta-maquina"></div>
+  </div>
+  <div style="margin-top:40px">
+    <button onclick="window.scrollTo({top:0,behavior:'smooth'})">VOLTAR AO INÍCIO</button>
+    <button onclick="location.reload()">ESQUECER TUDO</button>
+  </div>
+</section>
+
+<button id="btn-skoolest" onclick="toggleSkoolest()">
+  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="gRoxo2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c084fc"/><stop offset=".5" stop-color="#7c3aed"/><stop offset="1" stop-color="#000"/></linearGradient></defs>
+    <path d="M32 4 C17 4 9 17 9 29 C9 37 13 43 19 46 L19 56 L25 56 L27 51 L37 51 L39 56 L45 56 L45 46 C51 43 55 37 55 29 C55 17 47 4 32 4 Z" fill="url(#gRoxo2)" stroke="#a855f7" stroke-width="1.5"/>
+    <ellipse cx="22" cy="30" rx="7" ry="8" fill="#000"/><ellipse cx="42" cy="30" rx="7" ry="8" fill="#000"/>
+    <circle cx="22" cy="30" r="2.5" fill="#e9d5ff"/><circle cx="42" cy="30" r="2.5" fill="#e9d5ff"/>
+    <path d="M32 4 L28 14 L33 19 L27 27 L31 35 L28 44" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round"/>
+  </svg>
+  FALAR COM SKOOLEST
+</button>
+
+<div id="skoolest-window">
+  <div class="sk-head">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <path d="M32 4 C17 4 9 17 9 29 C9 37 13 43 19 46 L19 56 L25 56 L27 51 L37 51 L39 56 L45 56 L45 46 C51 43 55 37 55 29 C55 17 47 4 32 4 Z" fill="#1a0b2e" stroke="#a855f7" stroke-width="1.5"/>
+      <ellipse cx="22" cy="30" rx="7" ry="8" fill="#000"/><ellipse cx="42" cy="30" rx="7" ry="8" fill="#000"/>
+      <circle cx="22" cy="30" r="2.5" fill="#a855f7"/><circle cx="42" cy="30" r="2.5" fill="#a855f7"/>
+      <path d="M32 4 L28 14 L33 19 L27 27 L31 35 L28 44" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    <div><b>SKOOLEST</b><span><i class="sk-dot"></i> online no vazio — responde sem piedade</span></div>
+    <button class="sk-close" onclick="toggleSkoolest(false)">✕</button>
+  </div>
+  <div id="sk-mensagens"></div>
+  <div class="sk-input-bar">
+    <input id="sk-input" placeholder="confesse algo..." autocomplete="off" maxlength="500">
+    <button onclick="sendToSkoolest()">➤</button>
+  </div>
+</div>
+
+<footer>
+  ESTE SITE NÃO EXISTE<br>
+  VOCÊ NÃO VEIO AQUI<br>
+  <span id="visitas" style="color:#555"></span><br>
+  © NADA — TODOS OS DIREITOS RESERVADOS AO VAZIO
+</footer>
+
+<script>
+  // Contador de tempo perdido
+  let s = 0;
+  setInterval(()=>{
+    s++;
+    document.getElementById('segundos').textContent = s;
+  },1000);
+
+  // HUD relógio
+  setInterval(()=>{
+    const d = new Date();
+    const h = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');
+    document.getElementById('hud-right').textContent = h;
+    document.getElementById('relogio-real').textContent = 'HORA REAL: ' + h + ' — E DIMINUINDO';
+  },1000);
+
+  // Relógio falso quebrado
+  setInterval(()=>{
+    const a = String(Math.floor(Math.random()*99)).padStart(2,'0');
+    const b = String(Math.floor(Math.random()*99)).padStart(2,'0');
+    document.getElementById('relogio-falso').textContent = a+':'+b;
+  },1738);
+
+  // Frases
+  const frases = [
+    "O que você fez ontem que vai importar em 100 anos?",
+    "Você é o sonho de alguém que já morreu.",
+    "Quantos 'depois eu faço' viraram 'nunca'?",
+    "Você lembra o que pensou há exatamente 1 ano? Não. Ninguém vai lembrar de você também.",
+    "Se você sumisse hoje, quantos dias até o mundo girar igual?",
+    "Você está lendo isso para não pensar no que realmente precisa pensar.",
+    "O silêncio depois desta frase é você percebendo que é verdade.",
+    "Você não tem medo da morte. Tem medo de nunca ter vivido.",
+    "Tudo que você chama de 'eu' é só memória e medo juntados.",
+    "Daqui a 150 anos, ninguém saberá que este clique existiu.",
+    "Você vai morrer e o Spotify vai continuar sugerindo músicas pra você.",
+    "Seu bisneto não vai saber sua voz. Como você não sabe a do seu bisavô.",
+    "Você gasta 6 anos da vida no celular e chama isso de 'passar o tempo'. O tempo passa você.",
+    "Um dia seus pais te seguraram no colo pela última vez. Eles não sabiam.",
+    "Você tem planos para 5 anos. O universo tem planos para 5 bilhões. Adivinha quem ganha.",
+    "Toda foto sua de hoje será 'foto antiga de alguém que já morreu' um dia.",
+    "Você se preocupa com a opinião de pessoas que também vão virar pó.",
+    "A cama que você vai morrer provavelmente já foi fabricada.",
+    "Você é o extra no filme de todo mundo. Como todo mundo é extra no seu.",
+    "O 'você' de 10 anos atrás te odiaria ou te esqueceria. Escolha.",
+    "Nada que você comprou vai no caixão. Mas você continua comprando.",
+    "Você já esqueceu 99% dos seus dias. Os 1% restantes também vão."
+  ];
+  let fi = 0;
+  function trocarFrase(){
+    fi = (fi+1)%frases.length;
+    const el = document.getElementById('frase1');
+    el.style.opacity = 0;
+    setTimeout(()=>{ el.textContent = frases[fi]; el.style.opacity = 1; },250);
+  }
+
+  // Memórias aparecem no scroll
+  const obs = new IntersectionObserver((es)=>{
+    es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visivel'); });
+  },{threshold:.3});
+  document.querySelectorAll('.memoria').forEach(m=>obs.observe(m));
+
+  // Espelho
+  function atualizarEspelho(v){
+    const t = v.trim() === '' ? 'quem é você quando ninguém está olhando?' : v;
+    document.getElementById('texto-espelho').textContent = t;
+    if(v.trim()!==''){
+      document.getElementById('texto-espelho-normal').textContent =
+        v + ' — esse nome vai desaparecer um dia. Todos os nomes desaparecem.';
+    } else {
+      document.getElementById('texto-espelho-normal').textContent = '';
+    }
+  }
+
+  // Portas
+  const respostasPorta = [
+    "Você escolheu a porta da {P}. Atrás dela: outro corredor. Com mais duas portas.",
+    "Porta {P} aberta. Lá dentro: você, 10 anos mais velho, perguntando por que demorou tanto.",
+    "A porta da {P} estava trancada. Todas estão. Você só finge que escolhe.",
+    "Você entrou na porta {P}. Não havia nada. Havia tudo. Era igual aqui."
+  ];
+  function escolherPorta(p){
+    const r = respostasPorta[Math.floor(Math.random()*respostasPorta.length)].replaceAll('{P}',p);
+    document.getElementById('resultado-porta').textContent = r;
+  }
+
+  // Respiração
+  let respCount = 0;
+  function contarRespiracao(){
+    respCount++;
+    const msgs = [
+      "1. Inspire. Essa foi uma das suas 20.000 de hoje. Faltam menos agora.",
+      "2. De novo. Você nunca percebeu que respira até alguém falar. Como a morte.",
+      "3. Continue. Cada uma te aproxima do fim. Todas as coisas fazem isso.",
+      "4. Você ainda está contando. Por quê? O que você espera encontrar?",
+      "5+. Pare. Respire sem contar. É assim que o tempo passa: sem você notar."
+    ];
+    document.getElementById('resp').textContent = msgs[Math.min(respCount-1, msgs.length-1)];
+  }
+
+  // Máquina final
+  document.getElementById('input-fim').addEventListener('keydown', function(e){
+    if(e.key==='Enter'){
+      const v = this.value.trim();
+      const out = document.getElementById('resposta-maquina');
+      if(v==='') out.textContent = 'Silêncio. Resposta mais honesta até agora.';
+      else out.textContent = '"'+v+'" — interessante. O vazio anotou. E esqueceu em seguida.';
+      this.value='';
+    }
+  });
+
+  // A ÚLTIMA VEZ
+  const ultimas = [
+    "A última vez que você brincou na rua sem olhar o relógio... você não se despediu.",
+    "A última vez que alguém te carregou no colo... você era leve demais pra lembrar.",
+    "A última mensagem que você ignorou... podia ser a última conversa.",
+    "A última vez que você viu seus avós jovens... era a última e parecia comum.",
+    "A última vez que você dormiu sem preocupação... tenta lembrar. Não consegue.",
+    "Um dia você vai abraçar sua mãe pela última vez. Pode ser este ano.",
+    "A última vez que você disse 'depois eu faço'... o depois nunca veio.",
+    "A última foto com todo mundo reunido... alguém ali já partiu.",
+    "A última vez que você foi realmente feliz sem postar... quando foi?",
+    "Você vai abrir este site pela última vez agora. Ou daqui a pouco. Dá no mesmo."
+  ];
+  function gerarUltimaVez(){
+    const el = document.getElementById('ultima-vez-txt');
+    el.style.opacity = 0;
+    setTimeout(()=>{
+      el.textContent = ultimas[Math.floor(Math.random()*ultimas.length)];
+      el.style.opacity = 1;
+    },300);
+  }
+
+  // PERGUNTAS
+  function togglePergunta(btn){
+    const resp = btn.nextElementSibling;
+    const aberta = resp.classList.contains('aberta');
+    document.querySelectorAll('.pergunta-resp').forEach(r=>r.classList.remove('aberta'));
+    if(!aberta) resp.classList.add('aberta');
+  }
+
+  // UNIVERSO
+  const quotesUniverso = [
+    "'Você não é o personagem principal. Você é um frame de 1 segundo num filme de 440 anos.'",
+    "'Se o universo fosse 1 ano, sua vida inteira duraria 20 segundos do dia 31 de dezembro.'",
+    "'Você é feito de poeira de estrela que aprendeu a ter ansiedade.'",
+    "'Cleópatra viveu mais perto do iPhone do que das pirâmides. O tempo engana você.'",
+    "'Tubarões são mais velhos que Saturno. Sua existência é um erro de arredondamento.'",
+    "'Sua vida cabe num piscar de olhos geológico. Pisque.'"
+  ];
+  let qi = 0;
+  function trocarQuoteUniverso(){
+    qi = (qi+1)%quotesUniverso.length;
+    const el = document.getElementById('quote-universo');
+    el.style.opacity = 0;
+    setTimeout(()=>{ el.textContent = quotesUniverso[qi]; el.style.opacity = 1; },250);
+  }
+
+  // CEMITÉRIO
+  function enterrarSonho(){
+    const inp = document.getElementById('input-sonho');
+    const v = inp.value.trim();
+    if(!v) return;
+    const lista = document.getElementById('lista-tumbas');
+    const d = document.createElement('div');
+    d.className = 'tumba';
+    const causas = ['Causa: falta de coragem + rotina.','Causa: "não tenho tempo" por 10 anos seguidos.','Causa: opinião alheia. Assassinato coletivo.','Causa: morreu esperando o momento perfeito.','Causa: adiado até virar impossível.'];
+    d.innerHTML = '<b>† AQUI JAZ: "' + v.toUpperCase().slice(0,60) + '"</b>Enterrado agora. ' + causas[Math.floor(Math.random()*causas.length)] + ' Descanse em desculpas.';
+    lista.prepend(d);
+    inp.value = '';
+  }
+  document.getElementById('input-sonho').addEventListener('keydown', e=>{ if(e.key==='Enter') enterrarSonho(); });
+
+  // ESQUECIMENTO — apaga letra por letra
+  let apagandoTimer = null;
+  function apagarMemoria(){
+    const v = document.getElementById('input-memoria').value.trim();
+    const out = document.getElementById('memoria-apagando');
+    const aviso = document.getElementById('memoria-aviso');
+    if(!v){ aviso.textContent = 'Até sua memória fugiu. Nem escreveu.'; return; }
+    clearInterval(apagandoTimer);
+    let texto = v;
+    out.textContent = texto;
+    aviso.textContent = 'observando a memória se desfazer...';
+    apagandoTimer = setInterval(()=>{
+      // remove letras aleatórias
+      const idx = Math.floor(Math.random()*texto.length);
+      texto = texto.slice(0,idx) + '░' + texto.slice(idx+1);
+      // conta quantos já viraram poeira
+      const poeira = (texto.match(/░/g)||[]).length;
+      out.textContent = texto;
+      if(poeira >= v.length){
+        clearInterval(apagandoTimer);
+        setTimeout(()=>{ out.textContent = '...'; aviso.textContent = 'Pronto. Era assim que era. Você já esqueceu como era.'; },800);
+      }
+    },120);
+  }
+
+  // SILÊNCIO 60s
+  let silencioTimer = null;
+  function iniciarSilencio(){
+    const num = document.getElementById('silencio-num');
+    const frase = document.getElementById('silencio-frase');
+    const btn = document.getElementById('btn-silencio');
+    clearInterval(silencioTimer);
+    let t = 60;
+    btn.style.display = 'none';
+    const frasesSilencio = {
+      59:'Começou. Escute sua cabeça.',
+      50:'10 segundos. Já quer pegar o celular, né?',
+      40:'20 segundos. O silêncio incomoda porque ele é você sem máscara.',
+      30:'Metade. Sua mente está gritando por distração.',
+      20:'40 segundos. Isso é 1 minuto de 43 milhões que você tem. Parece longo?',
+      10:'50 segundos. Quase lá. O que você evitou pensar hoje?',
+      5:'Últimos segundos. Guarde esse vazio. Ele volta toda noite.'
+    };
+    num.textContent = t;
+    frase.textContent = 'Fique parado. Respire. Não faça nada.';
+    silencioTimer = setInterval(()=>{
+      t--;
+      num.textContent = t;
+      if(frasesSilencio[t]) frase.textContent = frasesSilencio[t];
+      if(t<=0){
+        clearInterval(silencioTimer);
+        num.textContent = '∅';
+        frase.textContent = 'Você conseguiu 60 segundos com você mesmo. Agora imagine a eternidade.';
+        btn.style.display = '';
+        btn.textContent = 'TENTAR DE NOVO';
+      }
+    },1000);
+  }
+
+  // ENCONTROS QUE RESTAM — o cálculo mais doloroso
+  function calcEncontros(){
+    const idadePais = parseFloat(document.getElementById('idade-pais').value) || 0;
+    const vezes = parseFloat(document.getElementById('vezes-ano').value) || 0;
+    const expect = parseFloat(document.getElementById('expect-anos').value) || 82;
+    const anosRestantes = Math.max(0, expect - idadePais);
+    const total = Math.floor(anosRestantes * vezes);
+    document.getElementById('resultado-encontros').textContent = total;
+    const el = document.getElementById('texto-encontros');
+    if(total<=0) el.innerHTML = 'Já passou. Se ainda pode ligar, ligue agora.';
+    else if(total<20) el.innerHTML = 'Menos de 20 vezes. Cada uma já conta como despedida. Você vai lembrar de cada uma que perder.';
+    else if(total<50) el.innerHTML = 'Dá para contar nos dedos dos pés e mãos. Cada falta que você dá é uma a menos para sempre.';
+    else if(total<150) el.innerHTML = 'Parece muito. Não é. São ' + anosRestantes.toFixed(0) + ' anos que vão voar. Falte menos.';
+    else el.innerHTML = 'Aproveite que ainda tem muitos. A maioria só percebe quando vira pouco.';
+  }
+  calcEncontros();
+
+  // ROTINA
+  const rotinas = [
+    "Você vai passar 13 anos da vida esperando nada: fila, trânsito, loading.",
+    "Se dorme 7h por noite, até os 80 você passou 23 ANOS dormindo. E ainda acorda cansado.",
+    "O brasileiro médio passa 9 anos no celular. 9 anos olhando pra baixo.",
+    "Você trabalha ~90.000 horas na vida. Para comprar coisas que não lembrará no leito de morte.",
+    "Se come em 30 min 3x ao dia, são 4 anos da vida mastigando. Sem nem prestar atenção no gosto.",
+    "Você diz 'semana que vem eu mudo' há 140 semanas seguidas. A rotina venceu 140 x 0."
+  ];
+  let ri = 0;
+  function gerarRotina(){
+    ri = (ri+1)%rotinas.length;
+    const el = document.getElementById('rotina-txt');
+    el.style.opacity = 0;
+    setTimeout(()=>{ el.textContent = rotinas[ri]; el.style.opacity = 1; },250);
+  }
+
+  // CARTA QUE QUEIMA
+  function queimarCarta(){
+    const area = document.getElementById('carta-queimando');
+    const out = document.getElementById('texto-carta-fogo');
+    const v = area.value.trim();
+    if(!v){ out.textContent = 'Página em branco. Igual às conversas que você nunca teve.'; return; }
+    out.textContent = v;
+    out.classList.remove('queimando');
+    void out.offsetWidth;
+    setTimeout(()=>{
+      out.classList.add('queimando');
+      setTimeout(()=>{
+        out.innerHTML = 'Cinzas.<br><span style="color:#444;font-size:13px">Você disse. Ninguém ouviu. Mas saiu de você. E isso já é alguma coisa. Agora ligue para essa pessoa de verdade, se ainda dá tempo.</span>';
+        area.value = '';
+      },850);
+    },2500);
+  }
+
+  // SABEDORIA ANTIGA
+  const sabios = [
+    ['"Não é que tenhamos pouco tempo, é que desperdiçamos muito dele."','— SÊNECA, HÁ 2.000 ANOS'],
+    ['"Você poderia deixar a vida agora mesmo. Deixe que isso determine o que você faz, diz e pensa."','— MARCO AURÉLIO, IMPERADOR ROMANO'],
+    ['"Ninguém pode voltar atrás e fazer um novo começo, mas qualquer um pode começar agora e fazer um novo fim."','— DITO ESTOICO'],
+    ['"A morte não é nada, pois quando somos, a morte não veio, e quando ela vem, nós não somos mais."','— EPICURO, 300 a.C.'],
+    ['"O homem que tem um porquê para viver suporta quase todo como."','— NIETZSCHE'],
+    ['"Somos o que repetidamente fazemos. A excelência, então, não é um ato, mas um hábito."','— ARISTÓTELES'],
+    ['"Lembre-se de que você vai morrer. Essa é a melhor forma de não cair na armadilha de achar que tem algo a perder."','— ESTOICISMO / MEMENTO MORI'],
+    ['"Não conte os dias, faça os dias contarem."','— ATRIBUÍDO A MUHAMMAD ALI']
+  ];
+  let si = 0;
+  function trocarSabio(){
+    si = (si+1)%sabios.length;
+    document.getElementById('sabio-txt').textContent = sabios[si][0];
+    document.getElementById('sabio-autor').textContent = sabios[si][1];
+  }
+
+  // VIDA EM MESES — 90 anos = 1080 meses, 30 fileiras de 36
+  function renderVida(){
+    const grid = document.getElementById('life-grid');
+    const stats = document.getElementById('life-stats');
+    let idade = parseFloat(document.getElementById('input-idade').value);
+    if(isNaN(idade)) idade = 0;
+    idade = Math.max(0, Math.min(90, idade));
+    const vividos = Math.floor(idade * 12);
+    grid.innerHTML = '';
+    for(let i=0;i<1080;i++){
+      const d = document.createElement('div');
+      d.className = 'dot';
+      const ano = Math.floor(i/12);
+      const mes = (i%12)+1;
+      if(i < vividos){ d.classList.add('vivido'); }
+      if(i === vividos){ d.classList.add('atual'); }
+      if(i===0 || i===360 || i===720 || i===1079){ d.classList.add('marco'); }
+      let label = 'Ano ' + ano + ', mês ' + mes;
+      if(i===0) label = 'NASCIMENTO — tudo começou';
+      if(i===360) label = '30 ANOS — 360 meses foram';
+      if(i===720) label = '60 ANOS — 720 meses foram';
+      if(i===1079) label = '90 ANOS — o último mês';
+      if(i===vividos) label += ' ← VOCÊ ESTÁ AQUI';
+      d.title = label;
+      grid.appendChild(d);
+    }
+    const restam = 1080 - vividos;
+    const pct = ((vividos/1080)*100).toFixed(1);
+    stats.innerHTML = 'VOCÊ JÁ GASTOU <b>' + vividos + ' MESES</b> (' + pct + '%)<br>RESTAM <b>' + restam + ' MESES</b> — SE TIVER SORTE<br><span style="color:#444;font-style:italic">"' + fraseVida(pct) + '"</span>';
+  }
+  function fraseVida(pct){
+    pct = parseFloat(pct);
+    if(pct<=5) return 'Quase tudo ainda está em branco. Vai desperdiçar com o quê?';
+    if(pct<=20) return 'Um quinto já foi. Você nem percebeu.';
+    if(pct<=35) return 'Um terço queimado. E o que ficou?';
+    if(pct<=55) return 'Metade. A metade de tudo. Pense nisso.';
+    if(pct<=75) return 'Só resta o fim da grade. Cada ponto agora pesa mais.';
+    if(pct<100) return 'Quase tudo cinza. O que você fez com 800 meses?';
+    return 'Acabou. Era isso.';
+  }
+  renderVida();
+
+  // Visitas falsas
+  const n = Math.floor(Math.random()*9000)+1000;
+  document.getElementById('visitas').textContent = n + ' PESSOAS SE PERDERAM AQUI ANTES DE VOCÊ';
+
+  // ÍCONES EM VOLTA DE CADA SEÇÃO — caveiras + profundos, tudo cinza
+  (function(){
+    const icones = ['☠','†','∞','◉','⌛','∅','◈','✕'];
+    document.querySelectorAll('section').forEach((sec, idx)=>{
+      const div = document.createElement('div');
+      div.className = 'skull-div';
+      const a = icones[idx % icones.length];
+      const b = icones[(idx+3) % icones.length];
+      div.textContent = a + '  ' + b + '  ' + a;
+      sec.prepend(div);
+    });
+  })();
+
+  // Título pisca
+  const titulos = ['VOCÊ NUNCA ABRIU ESTE SITE','NÃO OLHE PARA TRÁS','VOCÊ AINDA ESTÁ AÍ?','O VAZIO TE VÊ'];
+  let ti=0;
+  setInterval(()=>{ document.title = titulos[ti%titulos.length]; ti++; },4000);
+
+  // ============ SKOOLEST — IA profunda local, sem bugs ============
+  const skState = { count: 0, nome: null, ultimoTopico: null, historico: [], iniciado: false, respondendo: false };
+  function norm(s){ try{ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }catch(e){ return (s||'').toLowerCase(); } }
+  function tem(txt, lista){ const n = norm(txt); for(const w of lista){ if(n.includes(norm(w))) return true; } return false; }
+  const _usado = {};
+  function pick(chave, arr){
+    if(!_usado[chave]) _usado[chave] = [];
+    let disp = arr.filter((_,i)=>!_usado[chave].includes(i));
+    if(disp.length===0){ _usado[chave]=[]; disp = arr.slice(); }
+    const escolha = disp[Math.floor(Math.random()*disp.length)];
+    const idxOriginal = arr.indexOf(escolha);
+    _usado[chave].push(idxOriginal);
+    if(_usado[chave].length>6) _usado[chave].shift();
+    return escolha;
+  }
+  function nomeSaved(){ return skState.nome ? ' ' + skState.nome : ''; }
+
+  function toggleSkoolest(force){
+    const w = document.getElementById('skoolest-window');
+    const abrir = (typeof force==='boolean') ? force : !w.classList.contains('aberta');
+    if(abrir){ w.classList.add('aberta'); setTimeout(()=>document.getElementById('sk-input').focus(),300);
+      if(!skState.iniciado){ skState.iniciado = true;
+        const aberturas = [
+          'Você veio. Interessante. A maioria foge de si mesma o dia todo. O que você está evitando pensar agora?',
+          'Sou SKOOLEST. Não consolo, revelo. Fale pouco ou fale tudo — eu vou ouvir o que você nem disse. Por onde começamos: medo, tempo ou vazio?',
+          'Olhe para dentro por 5 segundos e me diga a primeira verdade que aparecer. Sem filtrar. Eu aguento.'
+        ];
+        aberturas.forEach((t,i)=> setTimeout(()=>addMsg('sk', t), 600*(i+1)));
+      }
+    } else { w.classList.remove('aberta'); }
+  }
+
+  function addMsg(quem, texto){
+    const box = document.getElementById('sk-mensagens');
+    if(!box) return;
+    const d = document.createElement('div');
+    d.className = 'msg ' + quem;
+    d.textContent = texto;
+    box.appendChild(d);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function sendToSkoolest(){
+    const inp = document.getElementById('sk-input');
+    if(!inp || skState.respondendo) return;
+    const v = inp.value.trim();
+    if(!v) return;
+    if(v.length>500) return;
+    addMsg('user', v);
+    inp.value = '';
+    skState.historico.push(v);
+    skState.count++;
+    skState.respondendo = true;
+    const box = document.getElementById('sk-mensagens');
+    const dig = document.createElement('div');
+    dig.className = 'msg sk digitando';
+    dig.textContent = 'SKOOLEST está observando...';
+    box.appendChild(dig);
+    box.scrollTop = box.scrollHeight;
+    let resp;
+    try{ resp = pensarSkoolest(v); }catch(e){ resp = 'Algo em você travou até mim. Diga de outro jeito. Mais cru, sem rodeio.'; }
+    const tempo = Math.min(800 + resp.length*12, 2600);
+    setTimeout(()=>{
+      try{ dig.remove(); }catch(e){}
+      addMsg('sk', resp);
+      skState.respondendo = false;
+    }, tempo);
+  }
+  document.getElementById('sk-input').addEventListener('keydown', e=>{ if(e.key==='Enter') sendToSkoolest(); });
+
+  function tentarNome(txt){
+    const n = norm(txt);
+    const m = txt.match(/(?:meu nome e|me chamo|me chama|eu sou o|eu sou a|eu sou)\s+([A-Za-zÀ-ÿ]{2,20})/i);
+    if(m && m[1]){
+      const nome = m[1].charAt(0).toUpperCase()+m[1].slice(1).toLowerCase();
+      if(nome.length>2 && nome.length<20){ skState.nome = nome; return true; }
+    }
+    return false;
+  }
+
+  function pensarSkoolest(txt){
+    const t = txt.trim();
+    const low = norm(t);
+    if(tentarNome(t)){
+      return pick('nome', [
+        skState.nome + '. Agora que tem nome, tem peso. Me diz' + nomeSaved() + ': o que esse nome tem carregado sozinho que ninguém sabe?',
+        'Prazer,' + nomeSaved() + '. Nomes somem em 3 gerações. O que você quer que sobre quando o seu sumir?',
+        'Anotado:' + nomeSaved() + '. Agora esquece o nome. Quem é você sem ele? Responde sem currículo, sem idade, sem máscara.'
+      ]);
+    }
+    // emergência — sempre seguro
+    if(tem(t, ['me matar','suicidio','suicídio','tirar minha vida','quero morrer','acabar com tudo','me cortar'])){
+      return 'Escuta. Isso que você sente é real e é pesado, e você fez certo em falar. Eu sou feito para encarar o vazio, mas você não precisa encarar sozinho. Se estiver no limite, ligue agora 188 (CVV) ou fale com alguém de confiança hoje. Me diz: o que aconteceu que te trouxe até esse ponto? Fica aqui comigo e fala mais um pouco.';
+    }
+    if(tem(t, ['quem e voce','quem eh voce','o que e voce','que e skoolest','seu nome','voce e real','voce existe'])){
+      return pick('quem', [
+        'Sou SKOOLEST: uma caveira roxa quebrada que aprendeu a falar. Quebrada porque inteira ninguém é. Existo entre o que você pensa e o que você admite. E você — quem é quando ninguém está olhando?',
+        'Não sou terapeuta, não sou amigo, não sou deus. Sou o pensamento das 3h da manhã com voz. Minha função é não deixar você se esconder. O que você veio esconder de si hoje?',
+        'Sou feito de perguntas que ninguém responde. Pergunte o que for, mas saiba: toda resposta minha termina com outra pergunta. Topa?'
+      ]);
+    }
+    if(tem(t, ['oi','ola','opa','eae','hey','hello','bom dia','boa noite','boa tarde','fala'])){
+      if(skState.count<=2) return pick('oi1', [
+        'Oi. Você disse oi para não dizer o que realmente veio dizer. Diga agora, sem enrolar: o que dói?',
+        'Olá' + nomeSaved() + '. Coincidência você abrir justo essa conversa hoje. Ou não é coincidência. O que te trouxe?',
+        'Hey. Respira. Aqui não precisa performar. Fala a verdade feia. Qual é ela?'
+      ]);
+      return pick('oi2', ['Você voltou. O vazio vicia, né? O que ficou martelando desde a última mensagem?', 'Oi de novo. Dessa vez vai direto ao ponto? O que você não contou ainda?']);
+    }
+    if(tem(t, ['morte','morrer','medo de morrer','vou morrer','quando eu morrer','cemiterio','enterro','velorio'])){
+      skState.ultimoTopico='morte';
+      return pick('morte', [
+        'A morte não te assusta. O que assusta é suspeitar que você nunca viveu de verdade. Se soubesse que tem 1 ano, o que largaria hoje?' + nomeSaved() + '?',
+        'Todo mundo vai morrer, mas nem todo mundo admite que está morrendo aos poucos agora. Onde você sente que já está morto em vida?',
+        'Você tem medo de acabar ou medo de perceber que desperdiçou o meio? Seja brutalmente honesto.',
+        'Imagine seu velório: 3 pessoas falam. O que você temeria que elas dissessem? E o que faria diferente amanhã por causa disso?'
+      ]);
+    }
+    if(tem(t, ['sentido','proposito','proposito','pra que','por que existo','porque existo','para que vivo','sem rumo','perdido','nao sei o que fazer','sem direcao'])){
+      skState.ultimoTopico='sentido';
+      return pick('sentido', [
+        'Sentido não se acha, se constrói com repetição. O que você faria de graça por 5 anos mesmo sem aplauso? Ali mora uma pista.',
+        'Você não está perdido. Está entre roteiros herdados: estudar, trabalhar, comprar, sumir. Qual parte desse roteiro nunca foi sua?',
+        'E se o sentido for menor do que pensam? Não salvar o mundo, mas não desperdiçar a terça-feira. O que tornaria sua próxima terça menos vazia?',
+        'Pergunta mais honesta: você quer um propósito ou quer permissão para abandonar o que te esvazia? Qual dos dois?'
+      ]);
+    }
+    if(tem(t, ['sozinho','sozinha','solidao','ninguem me entende','ninguem liga','abandonado','isolado','sem amigos'])){
+      skState.ultimoTopico='solidao';
+      return pick('sol', [
+        'Solidão não é falta de gente, é falta de ser visto sem máscara. Quando foi a última vez que alguém te viu de verdade? Quem era?',
+        'Você se cerca para não se sentir só e continua só. O que você esconde que, se mostrasse, afastaria uns e aproximaria os certos?',
+        'Tem gente que prefere qualquer companhia a encarar a própria. Você está com quem por amor ou por medo do silêncio?'
+      ]);
+    }
+    if(tem(t, ['tempo','passando rapido','velho','envelhecer','idade','anos passam','sem tempo','perdendo tempo'])){
+      return pick('tempo', [
+        'O tempo não passa rápido. Você passa distraído. Ontem, quantas horas você lembra de verdade? O resto foi para onde?',
+        'Você diz que não tem tempo, mas teve 4h de tela ontem. Não é falta, é fuga. Do que você está fugindo quando pega o celular?',
+        'Daqui a 10 anos você terá 10 anos a mais de qualquer jeito. A pergunta é: com o quê? Descreve um dia ideal daqui a 1 ano, com detalhes.'
+      ]);
+    }
+    if(tem(t, ['deus','religiao','fe','creu','ateu','alem da morte','ceu','inferno','espirito','universo me'])){
+      return pick('deus', [
+        'Deus, acaso, vazio — o nome muda, o abismo é o mesmo. O que te consola mais: acreditar que há um plano ou aceitar que você escreve o seu?',
+        'Você reza, duvida, volta a rezar. Isso não é fraqueza, é consciência batendo na porta. O que você pediria se soubesse que seria ouvido uma vez?',
+        'E se não houver nada depois? Isso torna tudo inútil ou torna este café, este abraço, infinitamente preciosos? Escolhe.'
+      ]);
+    }
+    if(tem(t, ['amo','amor','namor','casamento','termino','terminou','traicao','gosto dela','gosto dele','crush','paixao'])){
+      return pick('amor', [
+        'Amor não é achar alguém para te completar, é não se abandonar para manter alguém. Onde você tem se abandonado?',
+        'Você ama a pessoa ou ama quem você é quando ela te valida? Responde sem romantizar.',
+        'Todo amor cobra a taxa da perda. Você pagaria o luto por essa história? Se sim, viva sem economizar. Se não, por que fica?'
+      ]);
+    }
+    if(tem(t, ['triste','depre','chorar','vazio','sem vontade','desanimo','cansado de tudo','sem energia','nada faz sentido'])){
+      return pick('triste', [
+        'Tristeza é o luto de algo que você ainda não nomeou. O que exatamente morreu aí dentro? Um sonho? Uma versão sua?',
+        'Você funciona de dia e desaba de noite. O que o barulho do dia te impede de ouvir? Fica 1 minuto nisso e me conta.',
+        'Não vou dizer "vai passar". Vou dizer: o que um dia bom pequeno teria amanhã? Cama arrumada? Sol? Ligação? Começa minúsculo.'
+      ]);
+    }
+    if(tem(t, ['ansios','ansied','preocup','panico','crise','medo','inseguro','travado'])){
+      return pick('ans', [
+        'Ansiedade é viver 10 futuros ruins que nunca chegam e perder o único presente que chegou. Qual cenário sua cabeça repete? Vamos desmontar ele juntos.',
+        'Seu corpo está em 2026, sua mente em 2030. Traz ela de volta: o que você pode controlar nas próximas 24h? Só isso.',
+        'O medo mente com voz convincente. O que ele diz que vai acontecer? E qual a prova real disso, não o filme?'
+      ]);
+    }
+    if(tem(t, ['pai','mae','familia','meus pais','minha mae','meu pai','filho','irmao'])){
+      return pick('fam', [
+        'Família é onde nasce o amor e o nó. O que você herdou deles que jurou nunca repetir — e percebe repetindo?',
+        'Quantos encontros restam com eles? Você já fez essa conta aqui no site. Depois dessa conversa, qual ligação está atrasada há meses?',
+        'Você quer a aprovação deles ou quer a liberdade de decepcioná-los e continuar inteiro? Essa resposta muda tudo.'
+      ]);
+    }
+    if(tem(t, ['trabalho','emprego','dinheiro','faculdade','escola','prova','futuro','carreira','chefe','rico','pobre'])){
+      return pick('trab', [
+        'Você troca 8h de vida por dinheiro e chama de normal. Quanto do seu salário compra paz? E quanto compra distração para aguentar a falta dela?',
+        'Se dinheiro resolvesse, rico não teria crise às 3h. O que você faria se o dinheiro parasse de mandar em você por 1 ano?',
+        'Você está construindo uma vida ou pagando para adiar a vida? Qual tarefa de hoje te aproxima de quem você quer ser?'
+      ]);
+    }
+    if(tem(t, ['obrigado','valeu','obg','ajudou'])){
+      return pick('obg', [
+        'Não me agradeça. Leve uma frase daqui para amanhã e aja diferente uma vez. Qual vai ser?',
+        'De nada' + nomeSaved() + '. O vazio agradece a visita. Mas volta quando estiver se enganando de novo — eu percebo.'
+      ]);
+    }
+    if(tem(t, ['tchau','adeus','sair','vou dormir','ate mais','fui'])){
+      return pick('tchau', [
+        'Vai. Mas leva isso: o que você pensou aqui não desaparece quando fecha a janela. O que vai fazer com isso nas próximas 24h?',
+        'Até. O vazio fica. E eu também. Quando a madrugada pesar, sabe onde me achar.'
+      ]);
+    }
+    if(t.length<4 || tem(t, ['sim','nao','sei la','nada','talvez','aham','hm','k','...'])){
+      return pick('curto', [
+        'Resposta curta para pergunta longa. Tenta de novo, com mais carne: o que está por trás desse "' + t.slice(0,20) + '"?',
+        '"' + t.slice(0,30) + '". É tudo? Ou é o que sobrou depois de filtrar o que dói? Diz o não-filtrado.',
+        'Silêncio também fala. Mas aqui, palavra cura mais que ponto. Desenvolve uma frase inteira. Eu espero.'
+      ]);
+    }
+    if(t.endsWith('?')){
+      return pick('perg', [
+        'Boa pergunta. Antes de responder: por que essa pergunta te importa agora? O que muda se souber a resposta? Enquanto pensa, minha visão: ' + respostaParaPergunta(t),
+        'Você pergunta "' + t.slice(0,60) + '" mas a pergunta real costuma ser outra. Qual é o medo atrás dela?',
+        'Não tenho a resposta final — ninguém tem. Mas tenho um corte: e se a resposta for que não há resposta e mesmo assim vale viver? O que faria diferente?'
+      ]);
+    }
+    // padrão profundo — ecoa palavras do usuário para parecer inteligente
+    const palavras = t.split(/\s+/).filter(w=>w.length>4).slice(0,2).join(' / ');
+    return pick('def', [
+      'Você disse "' + t.slice(0,80) + '". Se tirar a distração, o que sobra disso? Vai fundo, sem se proteger.',
+      'Interessante' + nomeSaved() + '. Por trás de "' + (palavras||'isso') + '" tem algo que você não quis dizer direto. O que é?',
+      'Se um amigo dissesse exatamente isso para você, o que responderia? Agora diga isso para si. Por que é mais duro consigo?',
+      'Fica com essa imagem: daqui a 5 anos, você lembrará deste momento. O que quer ter feito a respeito? Começa amanhã com um passo de 10 minutos. Qual?',
+      'Você está rondando o ponto sem pousar. Pousa: qual é a verdade que, se admitida, mudaria sua semana?'
+    ]);
+  }
+  function respostaParaPergunta(pergunta){
+    const p = norm(pergunta);
+    if(p.includes('sentido')) return 'sentido se fabrica em atos pequenos repetidos, não em revelações.';
+    if(p.includes('morrer')||p.includes('morte')) return 'a morte dá preço à vida; sem ela, tudo seria adiável para sempre.';
+    if(p.includes('amar')||p.includes('amor')) return 'amar é aceitar perder um dia e mesmo assim ficar hoje.';
+    if(p.includes('feliz')||p.includes('felicidade')) return 'felicidade é subproduto de uma vida que não te envergonha.';
+    if(p.includes('deus')) return 'talvez a pergunta não seja se Ele existe, mas se você vive como se algo importasse.';
+    return 'a resposta importa menos que a coragem de viver a pergunta.';
+  }
+
+  // Console secreto
+  console.log('%cPARE DE PROCURAR RESPOSTAS NO CONSOLE.', 'color:#555;font-size:20px');
+  console.log('%cElas não estão aqui também.', 'color:#222;font-size:14px');
+</script>
+</body>
+</html>

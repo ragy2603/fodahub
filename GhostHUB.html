@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌀 GOOFY HUB — 500 GOOFYS + SONS LENDÁRIOS 🌀</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:"Comic Sans MS","Segoe UI",cursive,sans-serif;background:linear-gradient(45deg,#ff00ff,#00ffff,#ffff00,#00ff00,#ff0066,#7700ff,#ff00ff);background-size:700% 700%;animation:rainbow 10s linear infinite;color:#fff;min-height:100vh;overflow-x:hidden}
+@keyframes rainbow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+body.ohio{filter:hue-rotate(180deg) saturate(3) contrast(1.5);animation:rainbow .7s linear infinite}
+body.shaking{animation:rainbow 10s linear infinite,shk .18s infinite}
+@keyframes shk{0%{transform:translate(-6px,4px) rotate(-.6deg)}25%{transform:translate(6px,-5px) rotate(.6deg)}50%{transform:translate(-5px,-4px)}75%{transform:translate(5px,5px)}100%{transform:translate(0,0)}}
+#flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:10001;transition:opacity .1s}
+.mq{background:#000;color:#ffe600;font-weight:900;padding:7px 0;font-size:16px;border-bottom:4px dashed #fff;white-space:nowrap;overflow:hidden}
+.mq span{display:inline-block;animation:scr 18s linear infinite}
+@keyframes scr{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+nav{position:sticky;top:0;z-index:900;background:rgba(0,0,0,.92);border-bottom:4px solid #ff00ff;display:flex;gap:8px;align-items:center;padding:10px 14px;flex-wrap:wrap}
+.logo{font-size:26px;font-weight:900;background:linear-gradient(90deg,#ff0,#f0f,#0ff);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:1px}
+nav a{color:#0f0;text-decoration:none;font-weight:900;font-size:13px;border:2px solid #0f0;padding:6px 10px;border-radius:99px}
+nav a:hover{background:#0f0;color:#000}
+#online{background:#0f0;color:#000;font-weight:900;font-size:12px;padding:6px 12px;border-radius:99px;margin-left:auto;animation:blk 1s infinite alternate}
+@keyframes blk{to{opacity:.6}}
+header.hero{text-align:center;padding:26px 14px 8px}
+h1.mega{font-size:clamp(44px,10vw,130px);line-height:.9;font-weight:900;text-shadow:5px 5px 0 #000,-3px -3px 0 #ff00ff,0 0 40px #0ff,0 0 90px #ff0;animation:wob 1.1s infinite alternate ease-in-out}
+@keyframes wob{from{transform:rotate(-2.5deg) scale(1)}to{transform:rotate(2.5deg) scale(1.07)}}
+.sub{display:inline-block;margin:12px 6px;background:#000;border:3px solid #ffe600;color:#ffe600;font-weight:900;padding:8px 18px;transform:rotate(-2deg);box-shadow:6px 6px 0 #ff00ff;font-size:clamp(13px,2.6vw,20px)}
+.wrap{max-width:1120px;margin:0 auto;padding:14px}
+.hud{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.stat{background:#000;border:4px solid #fff;border-radius:16px;padding:10px;text-align:center;box-shadow:5px 5px 0 rgba(0,0,0,.6)}
+.stat b{font-size:11px;color:#aaa;letter-spacing:2px;display:block}
+.stat span{font-size:30px;font-weight:900}
+.stat small{color:#0f0;font-size:12px;font-weight:900}
+#goofyBarWrap{background:#222;border:2px solid #fff;height:14px;border-radius:99px;overflow:hidden;margin-top:6px}
+#goofyBar{height:100%;width:0%;background:linear-gradient(90deg,red,orange,yellow,lime,cyan,magenta);transition:width .3s}
+.sec{background:rgba(0,0,0,.88);border:4px solid #fff;border-radius:20px;padding:18px;margin:16px 0;box-shadow:8px 8px 0 #ff00ff}
+.sec h2{font-size:clamp(22px,4.5vw,40px);text-shadow:3px 3px 0 #ff00ff;margin-bottom:6px}
+.sec p{color:#ccc;line-height:1.55}
+.hero2{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+.stage{flex:1 1 300px;background:radial-gradient(circle at 50% 25%,#4a0a6a,#000 70%);border:5px solid #ffe600;border-radius:18px;padding:16px;text-align:center;box-shadow:0 0 40px #f0f}
+#tung{font-size:120px;cursor:pointer;display:inline-block;animation:spb 2.2s infinite ease-in-out;filter:drop-shadow(0 0 22px #ff0);user-select:none}
+@keyframes spb{0%{transform:rotate(-14deg) scale(1)}50%{transform:rotate(14deg) scale(1.22)}100%{transform:rotate(-14deg) scale(1)}}
+.btn{font-family:inherit;font-weight:900;font-size:16px;padding:13px 12px;border:4px solid #000;border-radius:13px;cursor:pointer;box-shadow:4px 4px 0 #000;transition:transform .08s}
+.btn:hover{transform:scale(1.04) rotate(-1deg)}
+.btn:active{transform:scale(.93)}
+.g1{background:#00ff00}.g2{background:#ff2222;color:#fff}.g3{background:#00c3ff}.g4{background:#ff00ff;color:#fff}.g5{background:#111;color:#ffe600;border-color:#ffe600}.g6{background:#fff}.g7{background:#ff9500}
+.grid-btns{flex:1 1 300px;display:grid;gap:10px;align-content:start}
+.soundgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-top:12px}
+.snd{font-family:inherit;font-weight:900;border:4px solid #000;border-radius:14px;padding:12px 8px;cursor:pointer;font-size:14px;box-shadow:4px 4px 0 #000;line-height:1.3}
+.snd small{display:block;font-size:11px;opacity:.7}
+.snd:hover{transform:scale(1.06) rotate(-1deg)}
+#dexTools{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+#dexTools input{flex:1;min-width:180px;font-family:inherit;font-weight:900;padding:10px;border:4px solid #0f0;border-radius:10px;background:#000;color:#0f0}
+.fbtn{font-family:inherit;font-weight:900;padding:9px 12px;border-radius:99px;border:3px solid #fff;background:#222;color:#fff;cursor:pointer;font-size:13px}
+.fbtn.on{background:#ffe600;color:#000;border-color:#000}
+#dexGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px;max-height:520px;overflow-y:auto;background:#050505;border:3px solid #333;border-radius:12px;padding:10px}
+.dex{border:3px solid #555;border-radius:12px;padding:8px 4px;text-align:center;background:#111;cursor:pointer;transition:transform .1s}
+.dex:hover{transform:scale(1.07) rotate(-1deg)}
+.dex .e{font-size:42px;display:block}
+.dex b{font-size:12px;display:block;color:#fff}
+.dex small{font-size:10px;color:#888}
+.dex.got{outline:3px solid #0f0;background:#0a1a0a}
+.dex.comum{border-color:#888}.dex.raro{border-color:#00c3ff;box-shadow:0 0 10px #00c3ff}.dex.epico{border-color:#c800ff;box-shadow:0 0 12px #c800ff}.dex.lendario{border-color:#ff9500;box-shadow:0 0 14px #ff9500}.dex.mitico{border-color:#ffe600;box-shadow:0 0 18px #ffe600;animation:blk .7s infinite alternate}
+.slot{display:flex;gap:10px;justify-content:center;margin:14px 0}
+.reel{width:90px;height:90px;background:#fff;border:5px solid #000;border-radius:16px;font-size:56px;display:flex;align-items:center;justify-content:center;color:#000}
+.reel.spin{animation:blk .1s infinite}
+#slotOut{background:#ffe600;color:#000;font-weight:900;padding:12px;border-radius:10px;text-align:center;border:4px solid #000;font-size:18px;min-height:54px}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:12px}
+.game{background:#111;border:3px dashed #ff0;border-radius:14px;padding:12px;text-align:center}
+#whack{display:grid;grid-template-columns:repeat(3,64px);gap:8px;justify-content:center;margin:10px 0}
+.cell{width:64px;height:64px;background:#222;border:3px solid #555;border-radius:12px;font-size:38px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cell.hit{background:#0a2a0a;border-color:#0f0}
+.ach{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-top:12px}
+.a{background:#151515;border:3px solid #333;border-radius:12px;padding:10px;text-align:center;font-size:13px}
+.a.un{border-color:#0f0;background:#0a1a0a;box-shadow:0 0 12px #0f0}
+.a b{display:block;font-size:14px}
+#chat{background:#000;border:3px solid #0f0;border-radius:12px;height:150px;overflow-y:auto;padding:10px;font-size:13px;margin-top:10px;line-height:1.7}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) rotate(-2deg);background:#ffe600;color:#000;font-weight:900;padding:12px 22px;border:4px solid #000;border-radius:12px;z-index:10002;display:none;max-width:94vw;text-align:center;box-shadow:6px 6px 0 #000;font-size:16px}
+#jump{position:fixed;inset:0;background:#000;z-index:10003;display:none;align-items:center;justify-content:center;flex-direction:column;animation:shk .1s infinite}
+#jump .big{font-size:min(50vw,300px);animation:jz .14s infinite alternate}
+@keyframes jz{from{transform:scale(1)}to{transform:scale(1.3) rotate(8deg)}}
+#jump h2{background:red;padding:8px 26px;font-size:clamp(24px,6vw,58px)}
+#lvl{position:fixed;inset:0;z-index:10004;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.8)}
+#lvl div{background:#ffe600;color:#000;border:6px solid #000;border-radius:20px;padding:30px;text-align:center;transform:rotate(-3deg);box-shadow:10px 10px 0 #ff00ff}
+.ep{position:fixed;pointer-events:none;z-index:10000;font-size:26px;animation:fly 1s ease-out forwards}
+@keyframes fly{to{transform:translateY(-150px) rotate(360deg) scale(1.8);opacity:0}}
+.rain{position:fixed;top:-60px;pointer-events:none;z-index:2;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(120vh) rotate(720deg)}}
+footer{text-align:center;padding:26px 12px 70px;font-weight:900;color:#000}
+footer .st{background:#fff;display:inline-block;padding:10px 20px;border:4px solid #000;transform:rotate(-2deg)}
+canvas#conf{position:fixed;inset:0;pointer-events:none;z-index:10000}
+@media(max-width:600px){#tung{font-size:88px}.reel{width:70px;height:70px;font-size:44px}}
+</style>
+</head>
+<body>
+<div id="flash"></div>
+<canvas id="conf"></canvas>
+<div class="mq"><span>🚨 GOOFY HUB v3 ULTRA 🚨 500 GOOFYS CATALOGADOS 🚨 18 SONS LENDÁRIOS 🚨 24 CONQUISTAS 🚨 3 MINI-JOGOS 🚨 SLOT GOOFY 🚨 MODO OHIO X2 🚨 BABABOSGUE 🚨&nbsp;</span></div>
+<nav>
+<div class="logo">🌀 GOOFY HUB</div>
+<a href="#clicker">👆 CLICKER</a><a href="#sounds">🔊 SONS</a><a href="#dex">📦 GOOFYDEX 500</a><a href="#slot">🎰 SLOT</a><a href="#games">🎮 JOGOS</a><a href="#ach">🏆 CONQUISTAS</a>
+<div id="online">🟢 6.666 goofys online</div>
+</nav>
+
+<header class="hero">
+<h1 class="mega">GOOFY HUB</h1>
+<div><span class="sub">✨ EDIÇÃO ULTRA EXAGERADA ✨ 500+ COISAS PRA VER ✨</span><span class="sub" style="border-color:#f0f;color:#f0f;box-shadow:6px 6px 0 #0ff">🔊 18 EFEITOS SONOROS GOOFYS 🔊</span></div>
+</header>
+
+<div class="wrap">
+<div class="hud">
+<div class="stat"><b>🌀 GOOFY POINTS</b><span id="pts">0</span><div id="goofyBarWrap"><div id="goofyBar"></div></div><small id="rank">NOOB GOOFY</small></div>
+<div class="stat"><b>👆 CLIQUES</b><span id="clks">0</span><small>combo: <span id="combo">0</span>x</small></div>
+<div class="stat"><b>📦 GOOFYS</b><span id="got">0/500</span><small id="pct">0% dex</small></div>
+<div class="stat"><b>🌪️ OHIO</b><span id="ohio">0%</span><small>🔊 sons: <span id="sndN">0</span></small></div>
+<div class="stat"><b>🎰 COISAS TOTAIS</b><span style="color:#ffe600">563</span><small>500 dex + 63 extras</small></div>
+</div>
+
+<div class="sec" id="clicker">
+<h2>👆 FARM DE TUNG — CLIQUE ATÉ O DEDO CAIR</h2>
+<p>Clique no tronco sagrado. Combo acima de 5x dá <b style="color:#ffe600">5x pontos</b>. A cada 20 cliques o Tung evolui e grita mais alto. Upgrades com seus pontos:</p>
+<div class="hero2">
+<div class="stage">
+<div style="color:#ff0;font-weight:900">👇 O TRONCO ESCOLHIDO 👇</div>
+<div id="tung">🪵</div>
+<div style="font-weight:900;font-size:20px">TUNG TUNG SAHUR <span id="tungLvl" style="color:#0f0">Nv.1</span></div>
+<div id="tungMsg" style="color:#ff9;min-height:24px;font-weight:900"></div>
+<div style="margin-top:8px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+<button class="btn g1" id="upAuto">🤖 AUTO-CLIQUE (100)</button>
+<button class="btn g3" id="upCrit">🎯 CRÍTICO x2 (250)</button>
+<button class="btn g7" id="upMega">💥 MEGA TUNG (500)</button>
+</div>
+</div>
+<div class="grid-btns">
+<button class="btn g4" id="bBABA">🌀 BABABOSGUE SUPREMO</button>
+<button class="btn g2" id="bJUMP">💀 JUMPSCARE NUCLEAR (não clica)</button>
+<button class="btn g5" id="bOHIO">🌪️ MODO OHIO X2</button>
+<button class="btn g1" id="bRAIN">🍌 CHUVA DE 100 EMOJIS</button>
+<button class="btn g3" id="bSHAKE">📳 TERREMOTO GOOFY</button>
+<button class="btn g6" id="bRUN">😜 BOTÃO QUE FOGE (tente clicar, +50)</button>
+</div>
+</div>
+</div>
+
+<div class="sec" id="sounds">
+<h2>🔊 SOUNDBOARD GOOFY — 18 SONS 100% SINTETIZADOS</h2>
+<p>Aperte tudo. Use teclas <b>1–9 Q W E R T Y U I O</b>. Cada som dá pontos. Sons agora em <b>volume vizinho-feliz</b> (bem baixinhos).</p>
+<div style="margin-top:10px;background:#0a0a1a;border:3px solid #0ff;border-radius:12px;padding:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<button class="btn g3" id="bMus">🎵 MÚSICA 8-BIT: OFF (clique p/ tocar)</button>
+<label style="font-weight:900;font-size:13px">🎚️ volume música: <input type="range" id="musVol" min="0" max="100" value="60" style="vertical-align:middle;width:140px"></label>
+<small style="color:#888">chiptune goofy em loop • começa no 1º clique (culpa do navegador)</small>
+</div>
+<div class="soundgrid" id="sndGrid"></div>
+<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+<button class="btn g2" id="bCombo">🎵 TOCAR COMBO DE TODOS OS SONS</button>
+<button class="btn g5" id="bMute">🔇 MUDO (covarde)</button>
+</div>
+</div>
+
+<div class="sec" id="dex">
+<h2>📦 GOOFYDEX — 500 GOOFYS PRA COLECIONAR</h2>
+<p>São <b style="color:#ffe600">500 criaturas goofys únicas</b> geradas pelo cérebro do Tung. Clique pra capturar e ganhar pontos (raro = mais pontos). Busque, filtre, complete 100% e vire lenda.</p>
+<div id="dexTools">
+<input id="dexSearch" placeholder="🔍 buscar goofy... ex: tung, pizza, ohio...">
+<button class="fbtn on" data-f="all">TUDO</button>
+<button class="fbtn" data-f="comum">COMUM</button>
+<button class="fbtn" data-f="raro">RARO</button>
+<button class="fbtn" data-f="epico">ÉPICO</button>
+<button class="fbtn" data-f="lendario">LENDÁRIO</button>
+<button class="fbtn" data-f="mitico">MÍTICO</button>
+<button class="fbtn" id="bRand" style="border-color:#ffe600;color:#ffe600">🎲 ALEATÓRIO</button>
+</div>
+<div id="dexGrid"></div>
+</div>
+
+<div class="sec" id="slot">
+<h2>🎰 SLOT DO BABABOSGUE</h2>
+<p>3 iguais = JACKPOT. 2 iguais = prêmio pequeno. Custa 20 pontos por giro. O Tung manipula os resultados (talvez).</p>
+<div class="slot"><div class="reel" id="r1">🪵</div><div class="reel" id="r2">🦈</div><div class="reel" id="r3">🍌</div></div>
+<button class="btn g1" id="bSpin" style="width:100%;font-size:22px">🎰 GIRAR (20 PTS)</button>
+<div id="slotOut" style="margin-top:10px">insira sua fé no bababosgue e gire...</div>
+</div>
+
+<div class="sec" id="games">
+<h2>🎮 ARCADE GOOFY — 3 JOGOS ULTRA JUSTOS</h2>
+<div class="games">
+<div class="game"><b>🔨 WHACK-A-TUNG (20s)</b><br><small>acerte o 🪵, desvie do 💩</small><div id="whack"></div><div>pontos: <b id="wScore">0</b></div><button class="btn g1" id="bWhack" style="margin-top:8px">COMEÇAR</button></div>
+<div class="game"><b>🎲 DADO DO DESTINO</b><br><small>aposte 10 pts. Tire 5+ e dobre. Tire 1 e o Tung ri de você.</small><div id="dice" style="font-size:70px;margin:8px">🎲</div><button class="btn g3" id="bDice">ROLAR DADO (10 PTS)</button><div id="diceOut" style="margin-top:6px;font-weight:900"></div></div>
+<div class="game"><b>✊ PEDRA PAPEL OHIO</b><br><small>versão goofy: 🪵🦈🍌</small><div style="font-size:16px;font-weight:900" id="pptOut">escolha sua arma:</div><div style="display:flex;gap:6px;justify-content:center;margin-top:8px"><button class="btn g6" data-p="t">🪵</button><button class="btn g6" data-p="s">🦈</button><button class="btn g6" data-p="b">🍌</button></div></div>
+</div>
+<div id="chat"><b style="color:#0f0">💬 CHAT GOOFY AO VIVO (totalmente real):</b><div id="chatMsgs"></div></div>
+</div>
+
+<div class="sec" id="ach">
+<h2>🏆 24 CONQUISTAS LENDÁRIAS</h2>
+<p>Desbloqueie tudo e ganhe o título supremo. O progresso salva no navegador.</p>
+<div class="ach" id="achGrid"></div>
+</div>
+
+<div class="sec">
+<h2>📜 MANDAMENTOS FINAIS DO HUB</h2>
+<p>1. Todo som ouvido aumenta seu rizz em 2%.<br>2. Quem completa a Goofydex vira funcionário do mês no Ohio.<br>3. O botão que foge merece respeito.<br>4. Konami ainda funciona. <small style="color:#666">↑↑↓↓←→←→ B A</small><br>5. BABABOSGUE.</p>
+</div>
+
+<footer><div class="st">© 2026 GOOFY HUB • 563 coisas goofys • 0% profissionalismo • BABABOSGUE ETERNO 🌀</div></footer>
+</div>
+
+<div id="toast"></div>
+<div id="jump"><div class="big">🪵😱</div><h2>TUNG TE PEGOU!</h2><p style="color:#fff;font-weight:900">clique pra sobreviver</p></div>
+<div id="lvl"><div><div style="font-size:70px">👑</div><h2 id="lvlT">RANK UP!</h2><p id="lvlD"></p><button class="btn g1" onclick="document.getElementById('lvl').style.display='none'">ÉPICO!</button></div></div>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+// ===== ESTADO =====
+let S={pts:0,clks:0,combo:0,snds:0,spins:0,whackBest:0,got:{},ach:{},auto:0,crit:1,mega:false,muted:false,ohio:0};
+try{const s=JSON.parse(localStorage.getItem('goofyhub3')||'{}');S={...S,...s}}catch(e){}
+function save(){try{localStorage.setItem('goofyhub3',JSON.stringify(S))}catch(e){}}
+// ===== AUDIO (modo vizinho feliz: tudo baixinho) =====
+let AC=null,muted=false;
+let sfxBus=null,musBus=null;
+const SFX_VOL=0.32; // ~68% mais baixo que antes
+function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){} if(AC){sfxBus=AC.createGain();sfxBus.gain.value=0.5;sfxBus.connect(AC.destination);musBus=AC.createGain();musBus.gain.value=0.5;musBus.connect(AC.destination)}}if(AC&&AC.state==='suspended')AC.resume();return AC}
+function tone(f,d,type,v,when,slide){if(S.muted)return;try{const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type||'square';o.frequency.setValueAtTime(f,a.currentTime+(when||0));if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(20,slide),a.currentTime+(when||0)+d);g.gain.value=(v||.06)*SFX_VOL;o.connect(g);g.connect(sfxBus||a.destination);o.start(a.currentTime+(when||0));o.stop(a.currentTime+(when||0)+d+.02)}catch(e){}}
+function nz(d,v,when){if(S.muted)return;try{const a=ac();if(!a)return;const b=a.createBuffer(1,a.sampleRate*d,a.sampleRate),c=b.getChannelData(0);for(let i=0;i<c.length;i++)c[i]=(Math.random()*2-1)*v*SFX_VOL;const s=a.createBufferSource();s.buffer=b;const g=a.createGain();g.gain.value=0.5;s.connect(g);g.connect(sfxBus||a.destination);s.start(a.currentTime+(when||0))}catch(e){}}
+const SFX={
+boing(){tone(150,.3,'sine',.10,0,600)},
+fart(){tone(90,.45,'sawtooth',.10,0,40);nz(.35,.06)},
+fart2(){tone(60,.8,'sawtooth',.09,0,30);tone(120,.5,'square',.05,.1,50);nz(.5,.05)},
+airhorn(){[440,554,659].forEach(f=>tone(f,.9,'sawtooth',.06));nz(.5,.03)},
+bruh(){tone(220,.5,'sawtooth',.08,0,90)},
+boom(){tone(70,.7,'sine',.11,0,35);nz(.6,.08);tone(45,1,'sine',.09,.05,28)},
+coin(){tone(990,.08,'square',.05);tone(1320,.25,'square',.05,.08)},
+laser(){tone(1800,.35,'sawtooth',.05,0,120)},
+expl(){nz(.8,.10);tone(100,.8,'sawtooth',.09,0,30)},
+pop(){tone(500,.09,'square',.07,0,900)},
+baba(){[200,320,150,420,260,520,700].forEach((f,i)=>tone(f,.14,'square',.06,i*.12))},
+siren(){for(let i=0;i<4;i++){tone(600,.25,'sawtooth',.06,i*.5);tone(900,.25,'sawtooth',.06,i*.5+.25)}},
+dial(){for(let i=0;i<8;i++)tone(400+Math.random()*2000,.08,'square',.04,i*.09)},
+bell(){tone(880,.4,'sine',.08);tone(880,.6,'sine',.08,.35)},
+scream(){tone(280,1,'sawtooth',.10,0,3200);nz(.9,.08)},
+power(){[300,400,500,650,800,1000].forEach((f,i)=>tone(f,.12,'square',.055,i*.09))},
+trom(){[400,380,360,300].forEach((f,i)=>tone(f,.35,'sawtooth',.07,i*.35))},
+scratch(){tone(800,.4,'sawtooth',.06,0,150);tone(150,.4,'sawtooth',.06,.4,900)},
+ohio(){tone(150,1.5,'sawtooth',.09,0,900);nz(1.2,.06);[500,700,900].forEach((f,i)=>tone(f,.2,'square',.06,.3+i*.2))}
+};
+// ===== MUSIQUINHA 8-BIT GOOFY (loop) =====
+const MUS={on:false,step:0,timer:null,vol:0.6,nextT:0};
+const LEAD=[523.25,659.25,783.99,659.25,880,783.99,659.25,523.25,587.33,698.46,880,698.46,783.99,659.25,523.25,392,523.25,659.25,783.99,880,783.99,698.46,659.25,587.33,659.25,587.33,523.25,587.33,659.25,783.99,1046.5,987.77];
+const BASS=[130.81,130.81,98,98,110,110,87.31,87.31,130.81,130.81,98,98,87.31,87.31,98,98];
+function musNote(f,t,d,type,v){try{const a=ac();if(!a||!musBus)return;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(.0002,v*MUS.vol),t+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+d);o.connect(g);g.connect(musBus);o.start(t);o.stop(t+d+0.03)}catch(e){}}
+function musTick(){if(!MUS.on)return;const a=ac();if(!a)return;const stepDur=0.21;const t=Math.max(a.currentTime+0.02,MUS.nextT);
+const s=MUS.step%32,b=MUS.step%16;
+const f=LEAD[s];if(f)musNote(f,t,0.19,'square',0.045);
+musNote(BASS[b],t,0.2,'triangle',0.07);
+if(MUS.step%2===0){try{const len=a.sampleRate*0.03,buf=a.createBuffer(1,len,a.sampleRate),ch=buf.getChannelData(0);for(let i=0;i<len;i++)ch[i]=(Math.random()*2-1)*0.05;const src=a.createBufferSource();src.buffer=buf;const g=a.createGain();g.gain.value=0.25;src.connect(g);g.connect(musBus);src.start(t)}catch(e){}}
+MUS.step++;MUS.nextT=t+stepDur}
+function musStart(){const a=ac();if(!a)return;if(MUS.on)return;MUS.on=true;MUS.step=0;MUS.nextT=a.currentTime+0.06;MUS.timer=setInterval(musTick,210);const b=$('bMus');if(b)b.textContent='🎵 MÚSICA 8-BIT: ON (clique p/ pausar)'}
+function musStop(){MUS.on=false;clearInterval(MUS.timer);const b=$('bMus');if(b)b.textContent='🎵 MÚSICA 8-BIT: OFF (clique p/ tocar)'}
+setTimeout(()=>{const b=$('bMus');if(b)b.onclick=()=>{ac();if(MUS.on){musStop()}else{musStart();toast('🎵 musiquinha goofy ligada! volume no slider 🎚️')}};
+const sl=$('musVol');if(sl)sl.oninput=e=>{MUS.vol=e.target.value/100;if(musBus)musBus.gain.value=0.5};
+document.addEventListener('pointerdown',function auto(){try{ac()}catch(e){} if(!$('bMus')||$('bMus').dataset.auto!=='1'){if($('bMus'))$('bMus').dataset.auto='1';musStart()} document.removeEventListener('pointerdown',auto)},{once:true})},0);
+const SNDLIST=[
+['boing','🔮 BOING','elástico goofy','g1'],['fart','💨 PEIDO','clássico','g7'],['fart2','💩 MEGA PEIDO','com eco + reverb','g2'],
+['airhorn','📯 AIRHORN','1M decibéis','g3'],['bruh','😐 BRUH','momento bruh','g6'],['boom','💥 VINE BOOM','boom!','g2'],
+['coin','🪙 MOEDA','mario goofy','g1'],['laser','🔫 LASER','pew pew','g3'],['expl','☢️ EXPLOSÃO','ohio nuke','g2'],
+['pop','🫧 POP','satisfatório','g1'],['baba','🌀 BABABOSGUE','o hino','g4'],['siren','🚨 SIRENE OHIO','corre!','g2'],
+['dial','📞 DISCADA','internet 1998','g6'],['bell','🔔 TACO BELL','ding!','g7'],['scream','😱 GRITO','tung raivoso','g2'],
+['power','⚡ POWER-UP','level up','g1'],['trom','🎺 TROMBONE TRISTE','womp womp','g6'],['ohio','🌪️ OHIO FINAL','só pra corajosos','g5']
+];
+function playSFX(k){SFX[k]();S.snds++;S.pts+=2;burst(innerWidth/2,innerHeight*0.4,6);upd();checkAch();save()}
+// ===== FX =====
+function toast(m,ms){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',ms||2200)}
+function burst(x,y,n){const E=['🪵','🦈','🍌','🍕','💩','😱','👑','🍓','🚽','✨','🤪','🌀','🧃','😎','🔥','💥'];for(let i=0;i<(n||10);i++){const d=document.createElement('div');d.className='ep';d.textContent=E[Math.floor(Math.random()*E.length)];d.style.left=(x+Math.random()*80-40)+'px';d.style.top=(y+Math.random()*30-15)+'px';d.style.fontSize=(18+Math.random()*30)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),1000)}}
+function flash(){const f=$('flash');f.style.opacity='1';setTimeout(()=>f.style.opacity='0',120)}
+function shake(ms){document.body.classList.add('shaking');setTimeout(()=>document.body.classList.remove('shaking'),ms||600)}
+function drop(e){const d=document.createElement('div');d.className='rain';const E=['🍌','🪵','🦈','🍕','✨','💩','🌀'];d.textContent=e||E[Math.floor(Math.random()*E.length)];d.style.left=Math.random()*100+'vw';d.style.fontSize=(20+Math.random()*42)+'px';d.style.animationDuration=(1.4+Math.random()*2)+'s';document.body.appendChild(d);setTimeout(()=>d.remove(),4200)}
+function rain(n){for(let i=0;i<n;i++)setTimeout(()=>drop(),Math.random()*1600)}
+const cvs=$('conf'),ctx=cvs.getContext('2d');let parts=[];
+function boomConf(n){cvs.width=innerWidth;cvs.height=innerHeight;const C=['#ff0','#f0f','#0ff','#0f0','#f00','#fff'];for(let i=0;i<(n||120);i++)parts.push({x:innerWidth/2,y:innerHeight/2,vx:(Math.random()-.5)*16,vy:(Math.random()-.7)*14,c:C[i%C.length],l:90});}
+(function loop(){ctx.clearRect(0,0,cvs.width,cvs.height);parts=parts.filter(p=>p.l>0);for(const p of parts){p.x+=p.vx;p.y+=p.vy;p.vy+=.35;p.l--;ctx.fillStyle=p.c;ctx.fillRect(p.x,p.y,7,7)}requestAnimationFrame(loop)})();
+// ===== RANKS =====
+const RANKS=[[0,'NOOB GOOFY'],[50,'GOOFY APRENDIZ'],[150,'MEMERO'],[350,'RIZZLER'],[700,'LORDE BABABOSGUE'],[1500,'DEUS DO OHIO 👑'],[3000,'GOOFY SUPREMO 🌌']];
+let curRank=RANKS[0][1];
+function upd(){
+$('pts').textContent=S.pts;$('clks').textContent=S.clks;$('combo').textContent=S.combo;
+$('sndN').textContent=S.snds;$('ohio').textContent=S.ohio+'%';
+const n=Object.keys(S.got).length;$('got').textContent=n+'/500';$('pct').textContent=Math.round(n/5)+'% dex';
+$('goofyBar').style.width=Math.min(100,S.pts/30)+'%';
+$('tungLvl').textContent='Nv.'+(1+Math.floor(S.clks/20));
+let r=RANKS[0][1];for(const[m,nm]of RANKS)if(S.pts>=m)r=nm;
+if(r!==curRank){curRank=r;$('lvlT').textContent=r;$('lvlD').textContent='+ rank desbloqueado com '+S.pts+' pontos!';$('lvl').style.display='flex';SFX.power();boomConf(150)}
+$('rank').textContent='rank: '+r;save();
+}
+// ===== CLICKER =====
+let comboT=null;
+$('tung').onclick=e=>{ac();S.clks++;S.combo++;clearTimeout(comboT);comboT=setTimeout(()=>S.combo=0,1300);
+let g=1*S.crit*(S.mega?5:1);if(S.combo>5)g*=5;
+if(Math.random()<0.06){g*=10;toast('🤑 CRÍTICO DO TUNG! +'+g);flash();SFX.expl()}else SFX.boing();
+S.pts+=g;S.ohio=Math.min(100,S.ohio+(Math.random()<.08?4:0));burst(e.clientX,e.clientY,10);
+const msgs=['SAHUR!','TUNG!','+'+g+' GOOFY!','o tronco agradece','BABA!','continua!'];$('tungMsg').textContent=msgs[Math.floor(Math.random()*msgs.length)];
+upd();checkAch()};
+$('upAuto').onclick=()=>{if(S.pts<100)return toast('❌ precisa de 100 pts');S.pts-=100;S.auto++;toast('🤖 auto-clique x'+S.auto+'! farmando sozinho...');SFX.power();upd()};
+$('upCrit').onclick=()=>{if(S.pts<250)return toast('❌ precisa de 250 pts');S.pts-=250;S.crit*=2;toast('🎯 crítico agora x'+S.crit);SFX.power();upd()};
+$('upMega').onclick=()=>{if(S.pts<500)return toast('❌ precisa de 500 pts');S.pts-=500;S.mega=true;toast('💥 MEGA TUNG ATIVADO! 5x pra sempre!');boomConf(120);SFX.ohio();upd()};
+setInterval(()=>{if(S.auto>0){S.pts+=S.auto;S.clks+=S.auto;upd()}},1000);
+// botoes hero
+$('bBABA').onclick=e=>{SFX.baba();S.pts+=10;flash();burst(e.clientX,e.clientY,18);toast('🌀 BABABOSGUE SUPREMO! +10');upd();checkAch()};
+$('bJUMP').onclick=()=>{SFX.scream();shake(1500);$('jump').style.display='flex';setTimeout(()=>{$('jump').style.display='none';S.pts+=20;toast('💀 era só brincadeira... ou não');upd()},1800)};
+$('jump').onclick=()=>$('jump').style.display='none';
+$('bOHIO').onclick=e=>{document.body.classList.toggle('ohio');const on=document.body.classList.contains('ohio');S.ohio=on?100:0;SFX.ohio();shake(1200);rain(40);S.pts+=15;toast(on?'🌪️ OHIO X2 ATIVADO! SEGURA!':'😮‍💨 saiu do Ohio... por enquanto');burst(e.clientX,e.clientY,20);upd();checkAch()};
+$('bRAIN').onclick=()=>{rain(100);SFX.coin();S.pts+=5;toast('🍌 CHUVA DE 100 EMOJIS!');upd()};
+$('bSHAKE').onclick=()=>{shake(1500);SFX.boom();flash();S.pts+=8;toast('📳 TERREMOTO GOOFY 9.9 NA ESCALA BABABOSGUE');upd()};
+let dod=0;
+$('bRUN').addEventListener('mouseover',()=>{dod++;tone(500+dod*90,.12,'square',.14);$('bRUN').style.transform=`translate(${Math.random()*240-120}px,${Math.random()*120-60}px)`;if(dod>=5){S.pts+=25;dod=0;$('bRUN').style.transform='';toast('🏆 +25 pela persistência!');upd()}});
+$('bRUN').onclick=e=>{S.pts+=50;burst(e.clientX,e.clientY,20);SFX.coin();toast('😱 VOCÊ PEGOU O IMPOSSÍVEL! +50');upd()};
+// ===== SOUNDBOARD =====
+const KEYS=['1','2','3','4','5','6','7','8','9','q','w','e','r','t','y','u','i','o'];
+const sg=$('sndGrid');
+SNDLIST.forEach(([k,label,sub,c],i)=>{
+const b=document.createElement('button');b.className='snd '+c;b.innerHTML=label+'<small>'+sub+' • tecla '+KEYS[i].toUpperCase()+'</small>';
+b.onclick=ev=>{playSFX(k);b.style.transform='scale(.9)';setTimeout(()=>b.style.transform='',120)};sg.appendChild(b)});
+document.addEventListener('keydown',e=>{const i=KEYS.indexOf(e.key.toLowerCase());if(i>=0&&SNDLIST[i])playSFX(SNDLIST[i][0]);
+seq.push(e.key);seq=seq.slice(-10);if(seq.join()===KON.join()){S.konami=1;S.pts+=500;SFX.airhorn();boomConf(150);rain(60);toast('🎮 KONAMI! +500! VOCÊ É O ESCOLHIDO',4000);upd()}});
+let seq=[];const KON=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+$('bCombo').onclick=()=>{SNDLIST.forEach(([k],i)=>setTimeout(()=>SFX[k](),i*160));shake(2000);rain(30);toast('🎵 COMBO SUPREMO DE 18 SONS!');S.pts+=30;upd()};
+$('bMute').onclick=()=>{S.muted=!S.muted;if(S.muted&&MUS.on)musStop();$('bMute').textContent=S.muted?'🔊 DESMUTAR (corajoso)':'🔇 MUDO (sons baixinhos)';toast(S.muted?'🔇 shhh... modo furtivo goofy (música tb parou)':'🔊 SONS DE VOLTA, baixinhos como prometido!')};
+// ===== GOOFYDEX 500 =====
+const EM=['🪵','🦈','🐊','🌵','🚽','🍓','🍌','🍕','💩','👑','✨','🤪','🌀','🧃','😎','👽','🤡','💀','🔥','🌚','🍩','🧠','👟','✈️','🐸','🐒','🦆','🐙','🦖','🍔','🌭','🍦','⚽','🎮','📞','🚗','🛸','🧻','🪠','🧲','🎺','🥁','🎸','🪐','🌈','☠️','🍦','🦄'];
+const PRE=['Tung','Trala','Bomba','Lirili','Skibidi','Baba','Bosgue','Ohio','Rizz','Mewing','Goofy','Sahur','Banan','Pizza','Toilet','Morango','Capiv','Tubar','Cacto','Açai','Pipoca','Meia','Torta','Zumbi','Robo','Ninja','Sombra','Turbo','Mega','Ultra','Mini','Super','Capita','Peido'];
+const SUF=['sahur','lalala','diro','rila','bosgue','baba','nho','zord','stein','pants','inator','oso','ildo','éas','master','prime','goof','tron','lito','sauro','moto','lino','gus','baldo','rildo','nejo','fate','ling'];
+function seeded(i){let x=i*9301+49297;return()=>{x=(x*9301+49297)%233280;return x/233280}}
+let DEX=[];
+for(let i=0;i<500;i++){const r=seeded(i+1);const e=EM[Math.floor(r()*EM.length)];const n=PRE[Math.floor(r()*PRE.length)]+' '+SUF[Math.floor(r()*SUF.length)]+' '+['Jr','X','2000','do Ohio','Supremo','Goofy','Prime'][Math.floor(r()*7)];
+const roll=r();const rar=roll<.55?'comum':roll<.8?'raro':roll<.92?'epico':roll<.98?'lendario':'mitico';
+const pw=Math.floor(r()*999)+1;DEX.push({id:i,name:n,e,rar,pw})}
+const RARC={comum:['⚪ COMUM',1,'#888'],raro:['🔵 RARO',5,'#00c3ff'],epico:['🟣 ÉPICO',15,'#c800ff'],lendario:['🟠 LENDÁRIO',40,'#ff9500'],mitico:['🌟 MÍTICO',150,'#ffe600']};
+let dexF='all';
+function renderDex(){const q=($('dexSearch').value||'').toLowerCase();const g=$('dexGrid');g.innerHTML='';
+let shown=0;
+for(const d of DEX){if(dexF!=='all'&&d.rar!==dexF)continue;if(q&&!d.name.toLowerCase().includes(q)&&!d.e.includes(q))continue;
+shown++;const div=document.createElement('div');div.className='dex '+d.rar+(S.got[d.id]?' got':'');
+div.innerHTML=`<span class="e">${d.e}</span><b>#${String(d.id+1).padStart(3,'0')} ${d.name}</b><small>${RARC[d.rar][0]} • ⚡${d.pw}</small>`;
+div.onclick=ev=>{if(!S.got[d.id]){S.got[d.id]=1;const pts=RARC[d.rar][1];S.pts+=pts;SFX[d.rar==='mitico'?'ohio':d.rar==='lendario'?'airhorn':d.rar==='epico'?'power':'coin']();burst(ev.clientX,ev.clientY,d.rar==='comum'?6:16);if(d.rar==='mitico'){boomConf(100);flash()}toast(`${d.e} #${d.id+1} capturado! ${RARC[d.rar][0]} +${pts}`)}else{S.pts+=1;SFX.pop()}upd();checkAch();renderDex()};
+g.appendChild(div)}
+if(shown===0)g.innerHTML='<div style="padding:20px;text-align:center">😭 nenhum goofy encontrado. Tente "tung"...</div>'}
+$('dexSearch').oninput=renderDex;
+document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-f]').forEach(x=>x.classList.remove('on'));b.classList.add('on');dexF=b.dataset.f;renderDex()});
+$('bRand').onclick=()=>{const d=DEX[Math.floor(Math.random()*500)];$('dexSearch').value='';dexF='all';renderDex();toast(`🎲 O destino escolheu: ${d.e} ${d.name} (#${d.id+1}) — clique nele!`,3000);document.querySelector('#dexGrid').scrollTop=0};
+// ===== SLOT =====
+const RE=['🪵','🦈','🍌','🍕','💩','👑','🌀'];
+$('bSpin').onclick=()=>{if(S.pts<20)return toast('❌ precisa de 20 pts! Farme no Tung!');S.pts-=20;S.spins++;
+['r1','r2','r3'].forEach(id=>$(id).classList.add('spin'));SFX.dial();
+setTimeout(()=>{const a=RE[Math.floor(Math.random()*RE.length)],b=RE[Math.floor(Math.random()*RE.length)],c=RE[Math.floor(Math.random()*RE.length)];
+$('r1').textContent=a;$('r2').textContent=b;$('r3').textContent=c;
+['r1','r2','r3'].forEach(id=>$(id).classList.remove('spin'));
+if(a===b&&b===c){const win=a==='👑'?500:200;S.pts+=win;SFX.ohio();boomConf(150);flash();$('slotOut').textContent=`🎰 JACKPOT ${a}${b}${c}! +${win} PTS!! O HUB TREME!`}
+else if(a===b||b===c||a===c){S.pts+=40;SFX.coin();$('slotOut').textContent=`✨ ${a} ${b} ${c} — dois iguais! +40 pts`}
+else{SFX.trom();$('slotOut').textContent=`💩 ${a} ${b} ${c} — o Tung comeu seus pontos. Tente de novo!`}
+upd();checkAch()},900)};
+// ===== JOGOS =====
+const wc=$('whack');let wRun=false,wS=0;
+for(let i=0;i<9;i++){const c=document.createElement('div');c.className='cell';c.textContent='🕳️';c.onclick=()=>{if(!wRun)return;if(c.textContent==='🪵'){wS++;S.pts+=5;SFX.pop();c.classList.add('hit');setTimeout(()=>c.classList.remove('hit'),200);$('wScore').textContent=wS}else if(c.textContent==='💩'){wS=Math.max(0,wS-2);SFX.fart();toast('💩 você socou cocô! -2')}};wc.appendChild(c)}
+$('bWhack').onclick=()=>{if(wRun)return;wRun=true;wS=0;$('wScore').textContent='0';SFX.siren();toast('🔨 ACERTE O 🪵! DESVIE DO 💩!');
+const iv=setInterval(()=>{const cells=[...wc.children];cells.forEach(c=>c.textContent='🕳️');
+for(let k=0;k<3;k++){const c=cells[Math.floor(Math.random()*9)];c.textContent=Math.random()<.7?'🪵':'💩'}},600);
+setTimeout(()=>{clearInterval(iv);wRun=false;[...wc.children].forEach(c=>c.textContent='🕳️');S.pts+=wS*2;S.whackBest=Math.max(S.whackBest,wS);toast(`⏰ FIM! ${wS} tungs socados! +${wS*2} pts`);SFX.power();upd();checkAch()},20000)};
+$('bDice').onclick=()=>{S.gambled=1;if(S.pts<10)return toast('❌ precisa de 10 pts');S.pts-=10;const v=Math.floor(Math.random()*6)+1;
+const faces=['⚀','⚁','⚂','⚃','⚄','⚅'];$('dice').textContent=faces[v-1];SFX.boing();shake(400);
+if(v>=5){S.pts+=25;SFX.coin();$('diceOut').textContent=`🎉 ${v}! DOBROU! +25`;boomConf(40)}else if(v===1){SFX.trom();$('diceOut').textContent='💀 1! O Tung está rindo de você.'}else{S.pts+=10;SFX.pop();$('diceOut').textContent=`😐 ${v}. Devolvemos seus 10.`}upd();checkAch()};
+document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{S.gambled=1;const m={t:'🪵',s:'🦈',b:'🍌'};const you=b.dataset.p,pc=['t','s','b'][Math.floor(Math.random()*3)];
+let out='';if(you===pc){out=`🤝 ${m[you]} x ${m[pc]} — EMPATE GOOFY! +5`;S.pts+=5;SFX.pop()}else if((you==='t'&&pc==='b')||(you==='s'&&pc==='t')||(you==='b'&&pc==='s')){out=`🎉 ${m[you]} x ${m[pc]} — VOCÊ VENCEU! +20`;S.pts+=20;SFX.power()}else{out=`💩 ${m[you]} x ${m[pc]} — O OHIO VENCEU!`;SFX.trom()}
+$('pptOut').textContent=out;burst(innerWidth/2,300,8);upd();checkAch()});
+// ===== CONQUISTAS =====
+const ACH=[
+['c1','👆 Primeiro Sahur','clique 1x',s=>s.clks>=1],['c2','🔥 Viciado','100 cliques',s=>s.clks>=100],
+['c3','💀 Dedo de Aço','500 cliques',s=>s.clks>=500],['c4','🌀 Bababosgue Jr','100 pts',s=>s.pts>=100],
+['c5','👑 Rico Goofy','700 pts',s=>s.pts>=700],['c6','🌌 Bilionário Ohio','3000 pts',s=>s.pts>=3000],
+['c7','🔊 DJ Goofy','use 10 sons',s=>s.snds>=10],['c8','🎵 Beethoven do Peido','50 sons',s=>s.snds>=50],
+['c9','📦 Colecionador','10 goofys',s=>Object.keys(s.got).length>=10],['c10','📦 Mestre Dex','100 goofys',s=>Object.keys(s.got).length>=100],
+['c11','🌟 Lenda Mítica','capture 1 mítico',s=>Object.keys(s.got).some(id=>DEX[id]&&DEX[id].rar==='mitico')],
+['c12','📦 100% DEX','capture 500!',s=>Object.keys(s.got).length>=500],['c13','🎰 Apostador','gire o slot 5x',s=>s.spins>=5],
+['c14','🔨 Socador','whack 15 pts',s=>s.whackBest>=15],['c15','🌪️ Sobrevivente Ohio','ative o Ohio',s=>s.ohio>=100||document.body.classList.contains('ohio')],
+['c16','🤖 Patrão','compre auto-clique',s=>s.auto>=1],['c17','🎯 Sniper','compre crítico',s=>s.crit>1],
+['c18','💥 Tanque','compre mega',s=>!!s.mega],['c19','🎮 Konami','código secreto',s=>!!s.konami],
+['c20','🏆 Persistente','pegue o botão que foge',s=>!!s.caught],['c21','💬 Fofoqueiro','fique 1 min no hub',s=>!!s.linger],
+['c22','🍌 Chuvoso','invoque chuva',s=>!!s.rained],['c23','🎲 Jogador','jogue dado + ppt',s=>!!s.gambled],
+['c24','🌀 BABABOSGUE FINAL','tudo acima (quase)',s=>Object.keys(s.got).length>=250&&s.pts>=1500]
+];
+function checkAch(){const g=$('achGrid');g.innerHTML='';for(const[id, nm, ds, fn]of ACH){const un=!!S.ach[id];
+let has=false;try{has=fn(S)}catch(e){}
+if(has&&!un){S.ach[id]=1;S.pts+=30;toast(`🏆 CONQUISTA: ${nm}! +30 pts`);SFX.power();boomConf(60)}
+const d=document.createElement('div');d.className='a'+(S.ach[id]?' un':'');d.innerHTML=`<b>${S.ach[id]?'✅':'🔒'} ${nm}</b>${ds}`;g.appendChild(d)}}
+// flag p/ extras
+$('bRUN').addEventListener('click',()=>{S.caught=1;checkAch()});
+$('bRAIN').addEventListener('click',()=>{S.rained=1;checkAch()});
+// chat fake
+const CHATN=['tung_fan22','tralala_rizz','xX_ohio_Xx','mewing_master','skibidi_queen','tio_do_zap','morango_love','capivara_god'];
+const CHATM=['BABABOSGUE','alguém viu meu tênis?','acabei de capturar um mítico!!','esse hub é melhor que terapia','TUNG TUNG SAHUR 🙏','meu rizz subiu 200% aqui','modo ohio me deu medo real','comprei mega tung, sem arrependimento','o botão que foge me humilhou','slot me deu jackpot, chorei','peido sonoro no talo 🔊'];
+setInterval(()=>{const m=$('chatMsgs');if(!m)return;const d=document.createElement('div');d.innerHTML=`<b style="color:#ff0">${CHATN[Math.floor(Math.random()*CHATN.length)]}:</b> ${CHATM[Math.floor(Math.random()*CHATM.length)]}`;m.prepend(d);while(m.children.length>20)m.lastChild.remove()},3500);
+setInterval(()=>{const o=$('online');if(o)o.textContent='🟢 '+(6000+Math.floor(Math.random()*1500)).toLocaleString('pt-BR')+' goofys online'},3000);
+setTimeout(()=>{S.linger=1;checkAch()},60000);
+// clique geral
+document.addEventListener('click',e=>{if(e.target.closest('button')||e.target.closest('.dex')||e.target.id==='tung')return;burst(e.clientX,e.clientY,2)});
+// init
+renderDex();checkAch();upd();
+setTimeout(()=>toast('👋 BEM-VINDO AO GOOFY HUB! SÃO 563 COISAS! CLIQUE EM TUDO!',3800),500);
+setInterval(()=>{if(!document.hidden&&Math.random()<.3){const r=['🍕 pizza goofy grátis no refeitório do Ohio','🪵 o Tung nº 247 piscou pra você','🦈 tralala passou correndo na dex','💩 cheiro de meme novo no ar'];toast(r[Math.floor(Math.random()*r.length)],1800)}},11000);
+</script>
+</body>
+</html>

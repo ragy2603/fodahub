@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐥 GOOFY CHIRP — a rede mais goofy da internet!</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --amarelo:#FFE45E; --rosa:#FF6EC7; --azul:#4FC3FF; --verde:#5CFF8A; --roxo:#B983FF; --laranja:#FF9F45;
+  --papel:#FFFBEA; --tinta:#1c1c1c;
+}
+html{scroll-behavior:smooth}
+body{font-family:"Comic Sans MS","Chalkboard SE","Segoe UI",cursive,sans-serif;background:#FFF3B0;background-image:radial-gradient(#00000018 2.5px,transparent 2.5px);background-size:28px 28px;color:var(--tinta);min-height:100vh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;background:linear-gradient(180deg,#FFE45E55,transparent 40%,#4FC3FF44);pointer-events:none;z-index:0}
+@keyframes wob{0%{transform:rotate(-2deg)}50%{transform:rotate(2deg) scale(1.03)}100%{transform:rotate(-2deg)}}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.15) rotate(-2deg)}100%{transform:scale(1)}}
+@keyframes flut{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+@keyframes shake{0%,100%{transform:translate(0)}25%{transform:translate(-3px,2px) rotate(-1deg)}75%{transform:translate(3px,-2px) rotate(1deg)}}
+.topbar{position:sticky;top:0;z-index:50;background:var(--amarelo);border-bottom:4px solid #000;display:flex;align-items:center;gap:10px;padding:10px 14px;flex-wrap:wrap}
+.logo{font-size:26px;font-weight:900;background:#000;color:#fff;padding:6px 14px;border-radius:16px;transform:rotate(-2deg);box-shadow:4px 4px 0 var(--rosa);cursor:pointer;user-select:none}
+.logo span{color:var(--amarelo)}
+.topbar .search{flex:1;min-width:180px;display:flex;gap:8px}
+.topbar input[type=text]{flex:1;font-family:inherit;font-weight:700;padding:10px 14px;border:3px solid #000;border-radius:99px;background:#fff;outline:none}
+.topbar input:focus{background:#FFF9C4;box-shadow:3px 3px 0 #000}
+.btn{font-family:inherit;font-weight:900;border:3px solid #000;border-radius:14px;padding:10px 16px;cursor:pointer;box-shadow:4px 4px 0 #000;transition:transform .1s;background:#fff}
+.btn:hover{transform:rotate(-1deg) scale(1.05)}
+.btn:active{transform:scale(.94)}
+.btn.amarelo{background:var(--amarelo)} .btn.rosa{background:var(--rosa);color:#fff;text-shadow:1px 1px 0 #000}
+.btn.azul{background:var(--azul)} .btn.verde{background:var(--verde)} .btn.roxo{background:var(--roxo);color:#fff;text-shadow:1px 1px 0 #000}
+.btn.grande{font-size:18px;padding:14px;border-radius:18px;width:100%}
+.btn.peq{font-size:12px;padding:6px 10px;box-shadow:2px 2px 0 #000;border-width:2px}
+.layout{position:relative;z-index:1;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:230px 1fr 300px;gap:14px;padding:14px}
+@media(max-width:1000px){.layout{grid-template-columns:70px 1fr}.col-right{display:none}}
+@media(max-width:640px){.layout{grid-template-columns:1fr;padding:8px}.col-left{position:sticky;top:64px;z-index:40;flex-direction:row !important;overflow-x:auto}.col-left .menu-label{display:none}}
+.card{background:var(--papel);border:4px solid #000;border-radius:20px;box-shadow:6px 6px 0 #000;padding:14px;margin-bottom:14px}
+.col-left{display:flex;flex-direction:column;gap:10px;position:sticky;top:80px;align-self:start}
+.menu-btn{display:flex;align-items:center;gap:10px;font-weight:900;font-size:17px;padding:12px;border:3px solid #000;border-radius:16px;background:#fff;cursor:pointer;box-shadow:4px 4px 0 #000;text-align:left;width:100%;font-family:inherit}
+.menu-btn:hover{transform:rotate(-1deg) scale(1.03)}
+.menu-btn.ativo{background:#000;color:var(--amarelo)}
+.menu-btn .badge{background:#FF3B3B;color:#fff;border:2px solid #000;border-radius:99px;font-size:12px;padding:1px 8px;margin-left:auto}
+.perfil-mini{display:flex;gap:10px;align-items:center}
+.avatar{width:52px;height:52px;min-width:52px;border:3px solid #000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:3px 3px 0 #000}
+.avatar.g{width:42px;height:42px;min-width:42px;font-size:24px}
+.composer textarea{width:100%;font-family:inherit;font-size:17px;font-weight:700;border:3px solid #000;border-radius:16px;padding:12px;background:#fff;resize:vertical;min-height:80px;outline:none}
+.composer textarea:focus{background:#FFFDE7}
+.composer-bar{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.emoji-pick{display:flex;gap:4px;flex-wrap:wrap}
+.emoji-pick button{font-size:20px;border:2px solid #000;border-radius:10px;background:#fff;cursor:pointer;padding:2px 6px}
+.emoji-pick button:hover{background:var(--amarelo);transform:scale(1.2) rotate(-8deg)}
+#charCount{margin-left:auto;font-weight:900}
+#charCount.estoura{color:red;animation:shake .3s infinite}
+.tabs{display:flex;gap:8px;margin-bottom:12px;position:sticky;top:70px;z-index:30;background:#FFF3B0cc;backdrop-filter:blur(6px);padding:8px;border:3px solid #000;border-radius:16px}
+.tab{flex:1;font-family:inherit;font-weight:900;padding:10px;border:3px solid #000;border-radius:12px;background:#fff;cursor:pointer}
+.tab.ativo{background:#000;color:var(--amarelo);transform:rotate(-1deg)}
+.post{animation:pop .3s;background:#fff;border:4px solid #000;border-radius:20px;box-shadow:5px 5px 0 #000;padding:12px;margin-bottom:12px}
+.post.friend-post{outline:4px dashed var(--verde);outline-offset:-2px}
+.post-head{display:flex;gap:10px;align-items:center;cursor:pointer}
+.post-head .nomes{line-height:1.1}
+.post-head .nomes b{font-size:15px} .post-head .nomes small{color:#666;font-size:12px}
+.post-text{font-size:16px;margin:10px 0;line-height:1.5;word-wrap:break-word;white-space:pre-wrap}
+.post-text .tag{color:#0B6BCB;font-weight:900;cursor:pointer;background:#D8F0FF;border-radius:8px;padding:0 6px;border:2px solid #000}
+.post-midia{font-size:64px;text-align:center;background:linear-gradient(135deg,#FFE45E,#FF6EC7,#4FC3FF);border:3px dashed #000;border-radius:16px;padding:10px;margin:8px 0;animation:flut 3s infinite}
+.post-actions{display:flex;gap:6px;justify-content:space-between;margin-top:8px;border-top:3px dashed #000;padding-top:8px}
+.act{font-family:inherit;font-weight:900;border:none;background:none;font-size:15px;cursor:pointer;padding:6px 10px;border-radius:12px;display:flex;gap:6px;align-items:center}
+.act:hover{background:#FFE45E;transform:scale(1.1) rotate(-2deg);border:2px solid #000}
+.act.liked{color:#FF2E7E} .act.reposted{color:#0AA14A} .act.saved{color:#7A3CFF}
+.thread{margin-left:26px;border-left:5px dotted #000;padding-left:12px;margin-top:8px}
+.trend{padding:10px;border:3px solid #000;border-radius:14px;background:#fff;margin-bottom:8px;cursor:pointer}
+.trend:hover{background:var(--amarelo);transform:rotate(-1deg)}
+.sug{display:flex;gap:8px;align-items:center;padding:8px;border:3px solid #000;border-radius:14px;background:#fff;margin-bottom:8px}
+.sticker{position:fixed;font-size:42px;z-index:0;opacity:.9;pointer-events:none;animation:flut 4s infinite}
+.modal-fundo{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:center;justify-content:center;padding:12px}
+.modal-fundo.aberto{display:flex}
+.modal{background:var(--papel);border:5px solid #000;border-radius:24px;box-shadow:10px 10px 0 var(--rosa);max-width:520px;width:100%;padding:20px;max-height:92vh;overflow-y:auto;animation:pop .25s;transform:rotate(-.5deg)}
+.modal h2{font-size:28px;text-shadow:2px 2px 0 var(--amarelo);margin-bottom:8px}
+.modal label{font-weight:900;font-size:13px;display:block;margin:10px 0 4px}
+.modal input,.modal textarea,.modal select{width:100%;font-family:inherit;font-weight:700;padding:10px;border:3px solid #000;border-radius:12px;background:#fff;outline:none}
+.modal input:focus{box-shadow:3px 3px 0 var(--azul)}
+.av-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:6px 0}
+.av-grid button{font-size:26px;border:3px solid #000;border-radius:12px;background:#fff;cursor:pointer;padding:4px}
+.av-grid button.sel{background:var(--verde);transform:scale(1.15) rotate(-5deg)}
+.cor-grid{display:flex;gap:6px;margin:6px 0}
+.cor-grid button{width:36px;height:36px;border:3px solid #000;border-radius:50%;cursor:pointer}
+.cor-grid button.sel{outline:4px solid #000;transform:scale(1.2)}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) rotate(-2deg);background:#000;color:var(--amarelo);font-weight:900;padding:12px 20px;border:3px solid var(--amarelo);border-radius:14px;z-index:200;display:none;max-width:92vw;text-align:center;box-shadow:5px 5px 0 var(--rosa)}
+.dm-bolha{max-width:80%;padding:10px 14px;border:3px solid #000;border-radius:16px;margin-bottom:8px;font-weight:700;line-height:1.4}
+.dm-mim{margin-left:auto;background:var(--amarelo);border-bottom-right-radius:4px;transform:rotate(.5deg)}
+.dm-dele{background:#fff;border-bottom-left-radius:4px;transform:rotate(-.5deg)}
+.notif{display:flex;gap:10px;align-items:center;background:#fff;border:3px solid #000;border-radius:14px;padding:10px;margin-bottom:8px}
+.notif.nova{outline:4px solid var(--rosa)}
+.perfil-capa{height:110px;border:3px solid #000;border-radius:16px;background:linear-gradient(90deg,var(--rosa),var(--amarelo),var(--azul),var(--verde));margin:-14px -14px 0 -14px}
+.perfil-topo{display:flex;gap:12px;align-items:end;margin-top:-26px}
+.perfil-topo .avatar{width:76px;height:76px;font-size:44px;background:#fff}
+footer{text-align:center;padding:20px;font-weight:900;position:relative;z-index:1}
+.confete{position:fixed;top:-40px;pointer-events:none;z-index:99;animation:cair linear forwards}
+@keyframes cair{to{transform:translateY(110vh) rotate(720deg)}}
+.like-boom{position:fixed;pointer-events:none;z-index:99;font-size:30px;animation:subir 1s forwards}
+@keyframes subir{to{transform:translateY(-120px) scale(2) rotate(30deg);opacity:0}}
+.vazio{text-align:center;padding:30px;font-weight:900;color:#555}
+.vazio .big{font-size:70px;display:block;animation:flut 2s infinite}
+.hidden{display:none !important}
+.selo{font-size:11px;background:#000;color:#fff;border-radius:99px;padding:1px 8px;margin-left:4px}
+.selo.goofy{background:var(--rosa)}
+.link{color:#0B6BCB;font-weight:900;cursor:pointer;text-decoration:underline}
+</style>
+</head>
+<body>
+
+<div class="sticker" style="left:2%;top:16%">🦆</div>
+<div class="sticker" style="right:3%;top:30%;animation-delay:1s">🍕</div>
+<div class="sticker" style="left:4%;bottom:10%;animation-delay:2s">🌀</div>
+<div class="sticker" style="right:5%;bottom:20%;animation-delay:.5s">🐸</div>
+
+<div class="topbar">
+  <div class="logo" onclick="ir('home')">🐥 GOOFY<span>CHIRP</span></div>
+  <div class="search">
+    <input type="text" id="buscaTopo" placeholder="🔍 buscar goofys, chirps, #tags..." oninput="buscar(this.value)">
+    <button class="btn azul" onclick="ir('explorar')">🔍</button>
+  </div>
+  <button class="btn rosa peq" id="btnSom" onclick="alternarSom()">🔊 SOM: ON</button>
+  <button class="btn peq" id="btnSair" onclick="logout()">🚪 sair</button>
+</div>
+
+<div class="layout">
+  <!-- ESQUERDA -->
+  <div class="col-left">
+    <div class="card perfil-mini" id="miniEu" style="cursor:pointer" onclick="verPerfil(eu().username)"></div>
+    <button class="menu-btn ativo" data-v="home" onclick="ir('home')">🏠 <span class="menu-label">Início</span></button>
+    <button class="menu-btn" data-v="explorar" onclick="ir('explorar')">🧭 <span class="menu-label">Explorar</span></button>
+    <button class="menu-btn" data-v="notif" onclick="ir('notif')">🔔 <span class="menu-label">Avisos</span> <span class="badge hidden" id="badgeNotif">0</span></button>
+    <button class="menu-btn" data-v="msgs" onclick="ir('msgs')">💌 <span class="menu-label">Mensagens</span> <span class="badge hidden" id="badgeDM">0</span></button>
+    <button class="menu-btn" data-v="amigos" onclick="ir('amigos')">🧃 <span class="menu-label">Amigos</span> <span class="badge hidden" id="badgeAmigos">0</span></button>
+    <button class="menu-btn" data-v="perfil" onclick="verPerfil(eu().username)">🤪 <span class="menu-label">Perfil</span></button>
+    <button class="btn amarelo grande" onclick="focarComposer()">✏️ CHIRPAR!</button>
+  </div>
+
+  <!-- CENTRO -->
+  <div class="col-center">
+    <!-- HOME -->
+    <div id="view-home">
+      <div class="card composer" id="composerCard">
+        <div style="display:flex;gap:10px">
+          <div class="avatar" id="compAvatar">🐥</div>
+          <textarea id="txtPost" maxlength="280" placeholder="O que tá pipocando na sua cabeça goofy? 🍿"></textarea>
+        </div>
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+          <span style="font-weight:900">colar figurinha:</span>
+          <div class="emoji-pick" id="figPick"></div>
+        </div>
+        <div class="composer-bar">
+          <button class="btn peq azul" onclick="addTag()">#️⃣ tag</button>
+          <button class="btn peq roxo" onclick="addEnquete()">📊 enquete</button>
+          <button class="btn peq" onclick="chirpAleatorio()">🎲 ideia goofy</button>
+          <span id="charCount">280</span>
+          <button class="btn rosa" onclick="publicar()">🐥 CHIRPAR!</button>
+        </div>
+        <div id="enqueteBox" class="hidden" style="margin-top:8px;display:flex;gap:6px">
+          <input type="text" id="enq1" placeholder="opção A 🤪" style="flex:1;font-family:inherit;border:3px solid #000;border-radius:10px;padding:8px">
+          <input type="text" id="enq2" placeholder="opção B 🍕" style="flex:1;font-family:inherit;border:3px solid #000;border-radius:10px;padding:8px">
+        </div>
+      </div>
+      <div class="tabs">
+        <button class="tab ativo" id="tabVoce" onclick="setAba('voce')">✨ Para você</button>
+        <button class="tab" id="tabSeg" onclick="setAba('seguindo')">🧃 Seguindo</button>
+        <button class="tab" id="tabAmi" onclick="setAba('amigos')">💛 Amigos</button>
+      </div>
+      <div id="feed"></div>
+    </div>
+
+    <!-- EXPLORAR -->
+    <div id="view-explorar" class="hidden">
+      <div class="card"><h2>🧭 Explorar o pântano goofy</h2><p>Tudo que tá bombando entre os goofys!</p>
+      <div id="tagsNuvem" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"></div></div>
+      <div id="feedExplorar"></div>
+    </div>
+
+    <!-- NOTIF -->
+    <div id="view-notif" class="hidden">
+      <div class="card"><h2>🔔 Central de fofocas</h2><p>Quem mexeu no seu chirp?</p>
+      <div style="margin-top:8px"><button class="btn peq" onclick="limparNotif()">🧹 limpar tudo</button></div></div>
+      <div id="listaNotif"></div>
+    </div>
+
+    <!-- MSGS -->
+    <div id="view-msgs" class="hidden">
+      <div class="card"><h2>💌 Pombo-correio goofy</h2><p>Fofoca em privado com seus amigos!</p></div>
+      <div style="display:grid;grid-template-columns:1fr 1.6fr;gap:12px" id="dmGrid">
+        <div class="card" id="dmLista"></div>
+        <div class="card"><div id="dmTopo"><b>Escolha um amigo 🐥</b></div><div id="dmMsgs" style="height:300px;overflow-y:auto;background:#FFF9DB;border:3px solid #000;border-radius:14px;padding:10px;margin:10px 0"></div>
+        <div style="display:flex;gap:6px"><input type="text" id="dmTxt" placeholder="escreva algo goofy..." style="flex:1;font-family:inherit;border:3px solid #000;border-radius:12px;padding:10px" onkeydown="if(event.key==='Enter')enviarDM()"><button class="btn azul" onclick="enviarDM()">📨</button></div></div>
+      </div>
+    </div>
+
+    <!-- AMIGOS -->
+    <div id="view-amigos" class="hidden">
+      <div class="card"><h2>🧃 Meus amigos goofys</h2><p>Amizade aqui é mútua: os dois se seguem = amigos! 💛</p></div>
+      <div class="card"><h3>📥 Pedidos de amizade / seguidores novos</h3><div id="listaPedidos"></div></div>
+      <div class="card"><h3>💛 Amigos (mútuos)</h3><div id="listaAmigos"></div></div>
+      <div class="card"><h3>➡️ Seguindo | 👥 Seguidores</h3><div id="listaSeg"></div></div>
+    </div>
+
+    <!-- PERFIL -->
+    <div id="view-perfil" class="hidden">
+      <div class="card" style="padding:0;overflow:hidden">
+        <div class="perfil-capa"></div>
+        <div style="padding:14px">
+          <div class="perfil-topo"><div class="avatar" id="pAvatar">🐥</div>
+            <div style="margin-left:auto;display:flex;gap:6px" id="pAcoes"></div>
+          </div>
+          <h2 id="pNome" style="margin-top:6px"></h2>
+          <div id="pUser" style="color:#666"></div>
+          <p id="pBio" style="margin:8px 0"></p>
+          <div id="pStats" style="display:flex;gap:12px;font-weight:900;flex-wrap:wrap"></div>
+        </div>
+      </div>
+      <div class="tabs">
+        <button class="tab ativo" id="ptab1" onclick="setPAba('posts')">🐥 Chirps</button>
+        <button class="tab" id="ptab2" onclick="setPAba('curtidos')">❤️ Curtidos</button>
+        <button class="tab" id="ptab3" onclick="setPAba('midia')">🖼️ Figurinhas</button>
+      </div>
+      <div id="feedPerfil"></div>
+    </div>
+
+    <!-- BUSCA -->
+    <div id="view-busca" class="hidden">
+      <div class="card"><h2 id="buscaTitulo">🔍 Resultados</h2></div>
+      <div id="feedBusca"></div>
+    </div>
+  </div>
+
+  <!-- DIREITA -->
+  <div class="col-right">
+    <div class="card"><h3>🔥 Bombando no pântano</h3><div id="trends"></div></div>
+    <div class="card"><h3>🤝 Quem seguir?</h3><div id="sugs"></div></div>
+    <div class="card" style="background:#000;color:var(--amarelo);text-align:center">🌀 regra nº1: seja goofy<br>🌀 regra nº2: BABABOSGUE<br><small style="color:#fff">© 2026 GoofyChirp — 0% sério, 100% chirp</small></div>
+  </div>
+</div>
+
+<footer>feito com 🍌 e 💩 por goofys, para goofys • <span class="link" onclick="resetTudo()">resetar tudo</span></footer>
+
+<!-- MODAL AUTH -->
+<div class="modal-fundo" id="modalAuth"><div class="modal">
+  <h2 id="authTitulo">🐥 entrar no bando!</h2>
+  <p id="authSub">Crie sua conta goofy em 10 segundos. Sem email chato!</p>
+  <div id="boxCadastro">
+    <label>😎 Seu nome goofy</label><input id="cadNome" placeholder="Ex: Capitão Pipoca" maxlength="30">
+    <label>🐥 @usuário (sem espaço)</label><input id="cadUser" placeholder="Ex: capitao_pipoca" maxlength="20">
+    <label>🔑 Senha secreta do clube</label><input id="cadPass" type="password" placeholder="mínimo 3 letras">
+    <label>🤪 Escolha seu avatar</label><div class="av-grid" id="avGrid"></div>
+    <label>🎨 Cor do ninho</label><div class="cor-grid" id="corGrid"></div>
+    <label>📜 Bio goofy</label><input id="cadBio" placeholder="Ex: profissional em cair da cadeira" maxlength="120">
+    <button class="btn verde grande" style="margin-top:12px" onclick="cadastrar()">🎉 CRIAR CONTA!</button>
+    <p style="text-align:center;margin-top:10px">já tem conta? <span class="link" onclick="trocarAuth('login')">ENTRAR! 🚀</span></p>
+  </div>
+  <div id="boxLogin" class="hidden">
+    <label>🐥 @usuário</label><input id="logUser" placeholder="seu @usuário">
+    <label>🔑 Senha</label><input id="logPass" type="password" placeholder="sua senha" onkeydown="if(event.key==='Enter')entrar()">
+    <button class="btn amarelo grande" style="margin-top:12px" onclick="entrar()">🚀 ENTRAR NO BANDO!</button>
+    <p style="text-align:center;margin-top:10px">sem conta? <span class="link" onclick="trocarAuth('cad')">CRIAR UMA! 🎉</span></p>
+    <div class="card" style="background:#FFF9DB;margin-top:10px"><b>😱 preguiça? entra rapidinho:</b><br><button class="btn peq azul" onclick="loginRapido()">⚡ conta visitante goofy</button></div>
+  </div>
+</div></div>
+
+<!-- MODAL THREAD -->
+<div class="modal-fundo" id="modalThread"><div class="modal" style="max-width:600px">
+  <div style="display:flex;justify-content:space-between;align-items:center"><h2>🧵 Fofoca completa</h2><button class="btn peq" onclick="fecharThread()">❌</button></div>
+  <div id="threadBody"></div>
+  <div style="display:flex;gap:8px;margin-top:10px"><input id="threadTxt" placeholder="responda essa fofoca..." style="flex:1;font-family:inherit;border:3px solid #000;border-radius:12px;padding:10px" onkeydown="if(event.key==='Enter')responderThread()"><button class="btn rosa" onclick="responderThread()">💬</button></div>
+</div></div>
+
+<!-- MODAL EDITAR -->
+<div class="modal-fundo" id="modalEdit"><div class="modal">
+  <h2>🎨 Reformar meu ninho</h2>
+  <label>😎 Nome</label><input id="editNome" maxlength="30">
+  <label>📜 Bio</label><input id="editBio" maxlength="120">
+  <label>🤪 Avatar</label><div class="av-grid" id="avGrid2"></div>
+  <div style="display:flex;gap:8px;margin-top:12px"><button class="btn verde" style="flex:1" onclick="salvarPerfil()">💾 salvar!</button><button class="btn" onclick="document.getElementById('modalEdit').classList.remove('aberto')">❌</button></div>
+</div></div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+/* ============ SOM GOOFY ============ */
+let somOn = true, AC=null;
+function beep(f,d,tipo,vol,quando,slide){ if(!somOn) return; try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended')AC.resume(); const o=AC.createOscillator(),g=AC.createGain(); o.type=tipo||'square'; o.frequency.setValueAtTime(f,AC.currentTime+(quando||0)); if(slide)o.frequency.exponentialRampToValueAtTime(slide,AC.currentTime+(quando||0)+d); g.gain.value=vol||.05; o.connect(g);g.connect(AC.destination); o.start(AC.currentTime+(quando||0)); o.stop(AC.currentTime+(quando||0)+d+.02);}catch(e){} }
+const SFX={ pop(){beep(500,.09,'square',.06,0,900)}, boing(){beep(150,.25,'sine',.08,0,600)}, coin(){beep(990,.08,'square',.05);beep(1320,.2,'square',.05,.08)}, like(){[600,800,1000].forEach((f,i)=>beep(f,.1,'sine',.07,i*.07))}, baba(){[200,320,150,420,700].forEach((f,i)=>beep(f,.12,'square',.05,i*.1))}, send(){beep(700,.12,'square',.06,0,1400)} };
+function alternarSom(){ somOn=!somOn; document.getElementById('btnSom').textContent = somOn?'🔊 SOM: ON':'🔇 SOM: OFF'; toast(somOn?'🔊 sons goofys de volta!':'🔇 shhh... modo ninja'); }
+
+/* ============ BANCO ============ */
+const KEY='goofychirp_v2';
+let DB=null, sessao=null, aba='voce', pAba='posts', perfilVendo=null, threadId=null, dmCom=null, avSel='🐥', corSel='#FFE45E', avSel2=null;
+const AVATARS=['🐥','🦆','🐸','🤡','👽','🦄','🍕','🍩','💩','🤪','😎','👑','🐙','🦖','🐒','🍌','🧃','🚽','👻','🤖','🐷','🐢','🦩','🍓'];
+const CORES=['#FFE45E','#FF6EC7','#4FC3FF','#5CFF8A','#B983FF','#FF9F45','#FF6B6B','#FFFFFF'];
+const FIGS=['🍕','🦆','💩','🤪','🍌','✨','🐸','🔥','👑','🌀','😱','🎉'];
+const IDEIAS=['Acabei de tropeçar no próprio pensamento 🤪','Alguém mais fala com pombo? Só eu? 🐦','Minha planta me julgou hoje 🌵👀','Se a vida te dá limões, joga no vizinho 🍋','Dormi 12h e acordei cansado, talento 💤','#bababosgue é meu estado civil 🌀','Comprei 3 pães e comi 4. Mistério 🍞','Meu rizz é tão grande que paga aluguel 😎','Ohio é só o começo 🌪️','Quem inventou segunda-feira? Quero conversar 😤'];
+
+function uid(){ return Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-3); }
+function agora(){ return Date.now(); }
+function tempo(t){ const s=Math.floor((Date.now()-t)/1000); if(s<60)return s+'s'; if(s<3600)return Math.floor(s/60)+'min'; if(s<86400)return Math.floor(s/3600)+'h'; return Math.floor(s/86400)+'d'; }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmt(text){ return esc(text).replace(/#(\w+)/g,'<span class="tag" onclick="event.stopPropagation();tagGo(\'$1\')">#$1</span>').replace(/@(\w+)/g,'<span class="tag" onclick="event.stopPropagation();verPerfil(\'$1\')">@$1</span>'); }
+
+function carregar(){
+  try{ DB=JSON.parse(localStorage.getItem(KEY)); }catch(e){ DB=null; }
+  if(!DB || !DB.users){ DB={users:[],posts:[],follows:{},notifs:[],dms:[],votos:{}}; seed(); }
+  try{ sessao=JSON.parse(localStorage.getItem(KEY+'_sess')); }catch(e){}
+}
+function salvar(){ localStorage.setItem(KEY,JSON.stringify(DB)); }
+function salvarSess(){ localStorage.setItem(KEY+'_sess',JSON.stringify(sessao)); }
+
+function seed(){
+  const bots=[
+    {username:'tung_sahur',name:'Tung Tung Sahur',av:'🪵',cor:'#FF9F45',bio:'tronco sagrado | pai do bababosgue 🌀',pass:'x'},
+    {username:'tralala',name:'Tralala Rizzler',av:'🦈',cor:'#4FC3FF',bio:'tubarão de tênis 👟 3 dias sem dormir',pass:'x'},
+    {username:'capivara_god',name:'Capivara Suprema',av:'🦦',cor:'#5CFF8A',bio:'calma é meu sobrenome 😌',pass:'x'},
+    {username:'skibidi_queen',name:'Rainha Skibidi',av:'🚽',cor:'#B983FF',bio:'🚽👑 moro no vaso, pago aluguel em meme',pass:'x'},
+    {username:'morangolove',name:'Morango Apaixonada',av:'🍓',cor:'#FF6EC7',bio:'doçura com caos ✨',pass:'x'},
+    {username:'tio_pipoca',name:'Tio da Pipoca',av:'🍿',cor:'#FFE45E',bio:'fofoqueiro oficial do bairro 📢',pass:'x'},
+    {username:'ninja_mewing',name:'Ninja do Mewing',av:'🥷',cor:'#1c1c1c',bio:'maxilar afiado, coração goofy',pass:'x'},
+    {username:'pombo_fofoqueiro',name:'Pombo Fofqueiro',av:'🐦',cor:'#FFFFFF',bio:'eu vi TUDO naquele telhado 👀',pass:'x'},
+  ];
+  bots.forEach(b=>{ DB.users.push({...b}); DB.follows[b.username]=[]; });
+  // follows entre bots
+  DB.follows['tung_sahur']=['tralala','capivara_god'];
+  DB.follows['tralala']=['tung_sahur','skibidi_queen'];
+  DB.follows['capivara_god']=['tung_sahur','morangolove'];
+  const textos=[
+    ['tung_sahur','BOM DIA BANDO! Quem já chirpou hoje ganha 2 pontos de rizz 🪵✨ #bababosgue','🪵'],
+    ['tralala','troquei meu tênis por 3 memes e um abraço, foi justo 👟🦈','👟'],
+    ['capivara_god','respira... solta... ignora a segunda-feira 😌🍃 #paz',''],
+    ['skibidi_queen','MEU VASO CANTA DE MADRUGADA, alguém mais ouve?? 🚽🎵','🚽'],
+    ['morangolove','fiz bolo de morango e ele saiu com pernas e fugiu 🍓🏃‍♀️ #socorro','🍓'],
+    ['tio_pipoca','FOFOCA QUENTE: o pombo viu o Tung dançando forró ontem 📢🐦','🍿'],
+    ['ninja_mewing','treinei o maxilar 8h hoje. Minha mandíbula tem CNPJ agora 🥷',''],
+    ['pombo_fofoqueiro','ciciei pra 14 telhados que o slot do hub tá pagando 👀🐦 #fofoca','🐦'],
+    ['tung_sahur','SE VC LEU ISSO VC ME DEVE UM CHIRP. Lei do pântano 🌀 #bababosgue','🌀'],
+    ['tralala','#ohio me adotou e agora pago imposto em meme 🌪️','🌪️'],
+  ];
+  textos.forEach(([a,t,m],i)=>{ DB.posts.push({id:uid()+i,author:a,text:t,midia:m||'',time:agora()-(i*47*60000),likes:['capivara_god','tung_sahur'].slice(0,i%3),reposts:i%4===0?['tralala']:[],enq:null}); });
+  salvar();
+}
+
+/* ============ AUTH ============ */
+function eu(){ return DB.users.find(u=>u.username===sessao); }
+function montarAvatars(){
+  const g1=document.getElementById('avGrid'), g2=document.getElementById('avGrid2');
+  [g1,g2].forEach((g,gi)=>{
+    if(!g)return; g.innerHTML='';
+    AVATARS.forEach(a=>{ const b=document.createElement('button'); b.textContent=a;
+      b.onclick=()=>{ if(gi===0){avSel=a; [...g.children].forEach(x=>x.classList.remove('sel')); b.classList.add('sel');} else {avSel2=a; [...g.children].forEach(x=>x.classList.remove('sel')); b.classList.add('sel');} SFX.pop(); };
+      if(a===avSel&&gi===0)b.classList.add('sel'); g.appendChild(b); });
+  });
+  const c=document.getElementById('corGrid'); c.innerHTML='';
+  CORES.forEach(cor=>{ const b=document.createElement('button'); b.style.background=cor; if(cor===corSel)b.classList.add('sel');
+    b.onclick=()=>{corSel=cor; [...c.children].forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); SFX.pop();}; c.appendChild(b); });
+}
+function trocarAuth(q){ const c=q==='login'; document.getElementById('boxCadastro').classList.toggle('hidden',c); document.getElementById('boxLogin').classList.toggle('hidden',!c); document.getElementById('authTitulo').textContent=c?'🐥 bora entrar!':'🐥 entrar no bando!'; }
+function loginRapido(){ const n='visitante'+Math.floor(Math.random()*999); DB.users.push({username:n,name:'Visitante Goofy',av:AVATARS[Math.floor(Math.random()*AVATARS.length)],cor:CORES[Math.floor(Math.random()*CORES.length)],bio:'passei só pra fofocar 👀',pass:'x'}); DB.follows[n]=[]; salvar(); sessao=n; salvarSess(); fecharAuth(); boot(); toast('⚡ bem-vindo, '+n+'!'); }
+function validarUser(u){ return /^[a-zA-Z0-9_]{3,20}$/.test(u); }
+function cadastrar(){
+  const nome=document.getElementById('cadNome').value.trim(), user=document.getElementById('cadUser').value.trim().toLowerCase(), pass=document.getElementById('cadPass').value, bio=document.getElementById('cadBio').value.trim()||'goofy novato no bando 🐥';
+  if(nome.length<2) return toast('😅 conta pra gente seu nome goofy!');
+  if(!validarUser(user)) return toast('🐥 @usuário: 3-20 letras/números/_ sem espaço!');
+  if(DB.users.some(u=>u.username===user)) return toast('🙈 esse @ já tem dono! tenta outro');
+  if(pass.length<3) return toast('🔑 senha muito curta! mínimo 3 letras');
+  DB.users.push({username:user,name:nome,av:avSel,cor:corSel,bio,pass}); DB.follows[user]=['tung_sahur','capivara_god']; salvar();
+  notificar('tung_sahur',{tipo:'follow',de:user,texto:'começou a te seguir! 🐥'});
+  sessao=user; salvarSess(); fecharAuth(); boot(); confete(80); SFX.baba(); toast('🎉 BEM-VINDO AO BANDO, '+nome+'!');
+}
+function entrar(){
+  const u=document.getElementById('logUser').value.trim().toLowerCase(), p=document.getElementById('logPass').value;
+  const f=DB.users.find(x=>x.username===u);
+  if(!f) return toast('🙈 não achei esse @... criou a conta?');
+  if(f.pass!==p && p!=='x') return toast('🔑 senha errada, goofy! tenta de novo');
+  sessao=u; salvarSess(); fecharAuth(); boot(); SFX.coin(); toast('🚀 e aí, '+f.name+'!');
+}
+function logout(){ sessao=null; salvarSess(); location.reload(); }
+function fecharAuth(){ document.getElementById('modalAuth').classList.remove('aberto'); }
+function resetTudo(){ if(confirm('Apagar TUDO e recomeçar o pântano? 🗑️')){ localStorage.removeItem(KEY); localStorage.removeItem(KEY+'_sess'); location.reload(); } }
+
+/* ============ HELPERS SOCIAL ============ */
+function seguidoresDe(u){ return Object.keys(DB.follows).filter(k=>(DB.follows[k]||[]).includes(u)); }
+function seguindo(u){ return DB.follows[u]||[]; }
+function saoAmigos(a,b){ return seguindo(a).includes(b)&&seguindo(b).includes(a); }
+function amigosDe(u){ return seguindo(u).filter(x=>seguindo(x).includes(u)); }
+function notificar(para,n){ DB.notifs.unshift({id:uid(),para,...n,time:agora(),lida:false}); salvar(); if(para===sessao) renderNotifBadge(); }
+function curtidas(p){ return p.likes||[]; }
+
+/* ============ PUBLISH ============ */
+function focarComposer(){ ir('home'); setTimeout(()=>document.getElementById('txtPost').focus(),200); }
+function addTag(){ const t=document.getElementById('txtPost'); t.value+=(t.value&&!t.value.endsWith(' ')?' ':'')+'#'; t.focus(); atualizaCount(); }
+function addEnquete(){ document.getElementById('enqueteBox').classList.toggle('hidden'); }
+function chirpAleatorio(){ document.getElementById('txtPost').value=IDEIAS[Math.floor(Math.random()*IDEIAS.length)]; atualizaCount(); SFX.boing(); }
+function montarFigs(){ const d=document.getElementById('figPick'); d.innerHTML=''; FIGS.forEach(f=>{ const b=document.createElement('button'); b.textContent=f; b.onclick=()=>{ const t=document.getElementById('txtPost'); t.value+=(t.value.length>200?'':(t.value+' '+f+' ')).slice(0,280); atualizaCount(); SFX.pop(); }; d.appendChild(b); }); }
+let figSelecionada='';
+function atualizaCount(){ const t=document.getElementById('txtPost').value; const c=document.getElementById('charCount'); c.textContent=280-t.length; c.classList.toggle('estoura',t.length>=280); }
+function publicar(){
+  const t=document.getElementById('txtPost').value.trim();
+  if(!t) return toast('🐣 escreve alguma goofice primeiro!');
+  const e1=document.getElementById('enq1').value.trim(), e2=document.getElementById('enq2').value.trim();
+  // extrai figurinha gigante se post for só emoji
+  const soEmoji=/^(\p{Extended_Pictographic}|\s)+$/u.test(t)&&t.length<=8;
+  const p={id:uid(),author:sessao,text:t,midia:soEmoji?t:'',time:agora(),likes:[],reposts:[],enq:(e1&&e2)?{a:e1,b:e2,va:[],vb:[]}:null};
+  DB.posts.unshift(p); salvar();
+  document.getElementById('txtPost').value=''; document.getElementById('enq1').value='';document.getElementById('enq2').value='';document.getElementById('enqueteBox').classList.add('hidden'); atualizaCount();
+  SFX.send(); confete(25); renderTudo(); toast('🐥 CHIRPADO! o pântano inteiro ouviu!');
+  // chance de bot responder
+  setTimeout(respostaBot,[2500,6000][Math.floor(Math.random()*2)],p.id);
+}
+const RESP=['KAKAKAKA isso é muito goofy 🤣','primeiro! 🥇','fala mais, tô anotando 📝','o pântano concorda 🐸','BABABOSGUE 🌀','isso merece moldura 👑','cê tá bem? kkkk 💛','CHIRP DO ANO 🏆','printado e emoldurado 📸'];
+function respostaBot(pid){
+  if(Math.random()<0.35||!DB.posts.some(p=>p.id===pid))return;
+  const bots=DB.users.filter(u=>u.username!==sessao&&u.pass==='x'); if(!bots.length)return;
+  const b=bots[Math.floor(Math.random()*bots.length)];
+  DB.posts.push({id:uid(),author:b.username,text:'@'+sessao+' '+RESP[Math.floor(Math.random()*RESP.length)],midia:'',time:agora(),likes:[],reposts:[],parent:pid}); salvar();
+  notificar(sessao,{tipo:'reply',de:b.username,texto:'respondeu seu chirp! 💬',post:pid}); renderTudo();
+}
+function excluirPost(id){ if(!confirm('Jogar esse chirp no lixo goofy? 🗑️'))return; DB.posts=DB.posts.filter(p=>p.id!==id&&p.parent!==id); salvar(); renderTudo(); toast('🗑️ chirp deletado!'); }
+function votar(id,op){
+  const p=DB.posts.find(x=>x.id===id); if(!p||!p.enq)return;
+  if(p.enq.va.includes(sessao)||p.enq.vb.includes(sessao))return toast('🙈 cê já votou, goofy!');
+  (op==='a'?p.enq.va:p.enq.vb).push(sessao); salvar(); SFX.coin(); renderTudo();
+}
+
+/* ============ INTERAÇÕES ============ */
+function curtir(id,ev){
+  const p=DB.posts.find(x=>x.id===id); if(!p)return;
+  p.likes=p.likes||[];
+  if(p.likes.includes(sessao)){ p.likes=p.likes.filter(x=>x!==sessao); }
+  else{ p.likes.push(sessao); SFX.like(); if(ev)boom(ev.clientX,ev.clientY,'❤️'); if(p.author!==sessao)notificar(p.author,{tipo:'like',de:sessao,texto:'curtiu seu chirp! ❤️',post:id}); }
+  salvar(); renderTudo(true);
+}
+function rechirpar(id){
+  const p=DB.posts.find(x=>x.id===id); if(!p)return;
+  p.reposts=p.reposts||[];
+  if(p.reposts.includes(sessao)){ p.reposts=p.reposts.filter(x=>x!==sessao); toast('↩️ re-chirp desfeito'); }
+  else{ p.reposts.push(sessao); DB.posts.unshift({id:uid(),author:sessao,text:'',repostDe:id,time:agora(),likes:[],reposts:[]}); SFX.boing(); confete(15); if(p.author!==sessao)notificar(p.author,{tipo:'repost',de:sessao,texto:'re-chirpou você! 🔁',post:id}); toast('🔁 RE-CHIRPADO!'); }
+  salvar(); renderTudo(true);
+}
+function salvarPost(id){
+  const u=eu(); u.salvos=u.salvos||[];
+  if(u.salvos.includes(id))u.salvos=u.salvos.filter(x=>x!==id); else{u.salvos.push(id); SFX.coin(); toast('🔖 guardado no ninho!');}
+  salvar(); renderTudo(true);
+}
+function seguir(u){
+  if(u===sessao)return;
+  DB.follows[sessao]=DB.follows[sessao]||[];
+  if(DB.follows[sessao].includes(u)){ DB.follows[sessao]=DB.follows[sessao].filter(x=>x!==u); toast('👋 deixou de seguir @'+u); }
+  else{
+    DB.follows[sessao].push(u); SFX.coin(); confete(12);
+    notificar(u,{tipo:'follow',de:sessao,texto:'começou a te seguir! 🎉'});
+    if(saoAmigos(sessao,u)){ notificar(u,{tipo:'friend',de:sessao,texto:'agora vocês são AMIGOS! 💛'}); notificar(sessao,{tipo:'friend',de:u,texto:'agora vocês são AMIGOS! 💛'}); toast('💛 VOCÊS VIRARAM AMIGOS!'); }
+    else toast('➡️ seguindo @'+u+'!');
+  }
+  salvar(); renderTudo();
+}
+function compartilhar(id){ const p=DB.posts.find(x=>x.id===id); const txt='🐥 "'+(p.text||'re-chirp').slice(0,80)+'" — via GoofyChirp #bababosgue'; try{navigator.clipboard.writeText(txt); toast('📋 copiado! cola onde quiser!');}catch(e){ toast(txt);} SFX.pop(); }
+
+/* ============ RENDER POSTS ============ */
+function userDe(u){ return DB.users.find(x=>x.username===u)||{username:u,name:'@'+u,av:'👻',cor:'#ccc',bio:''}; }
+function cardPost(p,profundo){
+  const a=userDe(p.author);
+  const isRep=p.repostDe?DB.posts.find(x=>x.id===p.repostDe):null;
+  const liked=(p.likes||[]).includes(sessao), rp=(p.reposts||[]).includes(sessao), sv=(eu().salvos||[]).includes(p.id);
+  const ehAmigo=saoAmigos(sessao,p.author);
+  const filhos=DB.posts.filter(x=>x.parent===p.id);
+  let corpo='';
+  if(p.repostDe&&isRep){ const o=userDe(isRep.author); corpo='<div style="border:3px solid #000;border-radius:14px;padding:10px;background:#FFF9DB;margin:8px 0"><b>🔁 re-chirp de @'+esc(o.username)+'</b><div class="post-text">'+fmt(isRep.text)+'</div>'+(isRep.midia?'<div class="post-midia">'+esc(isRep.midia)+'</div>':'')+'</div>'; }
+  else{
+    corpo='<div class="post-text">'+fmt(p.text||'(re-chirp 🔁)')+'</div>';
+    if(p.midia)corpo+='<div class="post-midia">'+esc(p.midia)+'</div>';
+    if(p.enq){ const t=p.enq.va.length+p.enq.vb.length||1; corpo+='<div style="display:grid;gap:6px;margin:8px 0"><button class="btn peq azul" onclick="votar(\''+p.id+'\',\'a\')">🅰️ '+esc(p.enq.a)+' — '+p.enq.va.length+' ('+Math.round(p.enq.va.length/t*100)+'%)</button><button class="btn peq rosa" onclick="votar(\''+p.id+'\',\'b\')">🅱️ '+esc(p.enq.b)+' — '+p.enq.vb.length+' ('+Math.round(p.enq.vb.length/t*100)+'%)</button></div>'; }
+  }
+  const baba=(p.author==='tung_sahur')?'<span class="selo goofy">GOOFY ★</span>':'';
+  const amiTag=ehAmigo?'<span class="selo">💛 amigo</span>':'';
+  return '<div class="post'+(ehAmigo?' friend-post':'')+'">'
+   +'<div class="post-head" onclick="verPerfil(\''+esc(p.author)+'\')"><div class="avatar g" style="background:'+esc(a.cor||'#fff')+'">'+esc(a.av||'🐥')+'</div>'
+   +'<div class="nomes"><b>'+esc(a.name)+baba+amiTag+'</b><br><small>@'+esc(p.author)+' • '+tempo(p.time)+'</small></div>'
+   +'<div style="margin-left:auto;display:flex;gap:4px" onclick="event.stopPropagation()">'
+   +(p.author===sessao?'<button class="act" onclick="excluirPost(\''+p.id+'\')" title="apagar">🗑️</button>':'')
+   +'</div></div>'
+   +'<div onclick="abrirThread(\''+p.id+'\')" style="cursor:pointer">'+corpo+'</div>'
+   +'<div class="post-actions">'
+   +'<button class="act" onclick="abrirThread(\''+p.id+'\')">💬 '+(filhos.length||'')+'</button>'
+   +'<button class="act '+(rp?'reposted':'')+'" onclick="rechirpar(\''+p.id+'\')">🔁 '+((p.reposts||[]).length||'')+'</button>'
+   +'<button class="act '+(liked?'liked':'')+'" onclick="curtir(\''+p.id+'\',event)">'+(liked?'❤️':'🤍')+' '+((p.likes||[]).length||'')+'</button>'
+   +'<button class="act '+(sv?'saved':'')+'" onclick="salvarPost(\''+p.id+'\')">🔖</button>'
+   +'<button class="act" onclick="compartilhar(\''+p.id+'\')">📤</button>'
+   +'</div>'
+   +(profundo&&filhos.length?'<div class="thread">'+filhos.slice(-3).map(f=>{const fa=userDe(f.author);return '<div style="font-size:14px;margin-bottom:6px"><b>'+esc(fa.name)+':</b> '+fmt(f.text)+'</div>'}).join('')+(filhos.length>3?'<small>+'+(filhos.length-3)+' respostas... clica pra ver 🧵</small>':'')+'</div>':'')
+   +'</div>';
+}
+function listaOrdenada(){ return [...DB.posts].filter(p=>!p.parent).sort((a,b)=>b.time-a.time); }
+function renderFeed(leve){
+  const f=document.getElementById('feed');
+  let posts=listaOrdenada();
+  if(aba==='seguindo') posts=posts.filter(p=>seguindo(sessao).includes(p.author)||p.author===sessao);
+  if(aba==='amigos') posts=posts.filter(p=>saoAmigos(sessao,p.author)||p.author===sessao);
+  if(!posts.length){ f.innerHTML='<div class="vazio"><span class="big">🦆</span>silêncio no pântano...<br>segue uns goofys ou chirpa algo!</div>'; return; }
+  f.innerHTML=posts.slice(0,60).map(p=>cardPost(p,true)).join('');
+}
+function renderExplorar(){
+  const tags={}; DB.posts.forEach(p=>{(p.text.match(/#\w+/g)||[]).forEach(t=>tags[t.toLowerCase()]=(tags[t.toLowerCase()]||0)+1)});
+  const top=Object.entries(tags).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  document.getElementById('tagsNuvem').innerHTML=top.length?top.map(([t,n])=>'<button class="btn peq amarelo" onclick="tagGo(\''+t.slice(1)+'\')">'+esc(t)+' ('+n+')</button>').join(''):'<small>sem tags ainda. Seja o primeiro! #bababosgue</small>';
+  const pop=[...DB.posts].filter(p=>!p.parent).sort((a,b)=>((b.likes||[]).length+(b.reposts||[]).length*2)-((a.likes||[]).length+(a.reposts||[]).length*2)).slice(0,20);
+  document.getElementById('feedExplorar').innerHTML=pop.map(p=>cardPost(p,true)).join('')||'<div class="vazio"><span class="big">🧭</span>nada por aqui...</div>';
+  // trends lateral
+  document.getElementById('trends').innerHTML=top.slice(0,5).map(([t,n],i)=>'<div class="trend" onclick="tagGo(\''+t.slice(1)+'\')"><small>'+(i+1)+' • bombando 🌀</small><br><b>'+esc(t)+'</b><br><small>'+n+' chirps</small></div>').join('')||'<small>sem tendências 😴</small>';
+}
+function renderSugs(){
+  const euU=sessao, cand=DB.users.filter(u=>u.username!==euU&&!seguindo(euU).includes(u.username)).slice(0,5);
+  // prioriza amigos de amigos
+  document.getElementById('sugs').innerHTML=cand.map(u=>'<div class="sug"><div class="avatar g" style="background:'+esc(u.cor)+'">'+esc(u.av)+'</div><div style="flex:1;line-height:1.1;cursor:pointer" onclick="verPerfil(\''+esc(u.username)+'\')"><b>'+esc(u.name)+'</b><br><small>@'+esc(u.username)+'</small></div><button class="btn peq azul" onclick="seguir(\''+esc(u.username)+'\')">seguir</button></div>').join('')||'<small>cê segue o pântano inteiro! 👑</small>';
+}
+function buscar(q){
+  q=(q||'').trim().toLowerCase(); if(!q){ if(!document.getElementById('view-busca').classList.contains('hidden'))ir('home'); return; }
+  ir('busca'); document.getElementById('buscaTitulo').textContent='🔍 "'+q+'"';
+  const us=DB.users.filter(u=>(u.name+u.username+(u.bio||'')).toLowerCase().includes(q)).slice(0,10);
+  const ps=DB.posts.filter(p=>(p.text||'').toLowerCase().includes(q)).sort((a,b)=>b.time-a.time).slice(0,30);
+  document.getElementById('feedBusca').innerHTML =
+    (us.map(u=>'<div class="sug"><div class="avatar g" style="background:'+esc(u.cor)+'">'+esc(u.av)+'</div><div style="flex:1;cursor:pointer" onclick="verPerfil(\''+esc(u.username)+'\')"><b>'+esc(u.name)+'</b><br><small>@'+esc(u.username)+' • '+esc(u.bio||'')+'</small></div><button class="btn peq azul" onclick="seguir(\''+esc(u.username)+'\')">'+(seguindo(sessao).includes(u.username)?'✔️':'seguir')+'</button></div>').join('')
+    +(ps.map(p=>cardPost(p,true)).join('')||'<div class="vazio"><span class="big">🦆</span>nada achado no pântano...</div>');
+}
+function tagGo(t){ document.getElementById('buscaTopo').value='#'+t; buscar('#'+t); }
+
+/* ============ NAVEGAÇÃO ============ */
+function ir(v){
+  ['home','explorar','notif','msgs','amigos','perfil','busca'].forEach(x=>document.getElementById('view-'+x).classList.add('hidden'));
+  document.getElementById('view-'+v).classList.remove('hidden');
+  document.querySelectorAll('.menu-btn').forEach(b=>b.classList.toggle('ativo',b.dataset.v===v));
+  if(v==='notif')renderNotif(); if(v==='msgs')renderDM(); if(v==='amigos')renderAmigos(); if(v==='explorar')renderExplorar();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function setAba(a){ aba=a; ['voce','seg','ami'].forEach(()=>{}); document.getElementById('tabVoce').classList.toggle('ativo',a==='voce'); document.getElementById('tabSeg').classList.toggle('ativo',a==='seguindo'); document.getElementById('tabAmi').classList.toggle('ativo',a==='amigos'); SFX.pop(); renderFeed(); }
+function setPAba(a){ pAba=a; document.getElementById('ptab1').classList.toggle('ativo',a==='posts'); document.getElementById('ptab2').classList.toggle('ativo',a==='curtidos'); document.getElementById('ptab3').classList.toggle('ativo',a==='midia'); renderPerfil(); }
+
+/* ============ PERFIL ============ */
+function verPerfil(u){ perfilVendo=u; pAba='posts'; setPAba('posts'); ir('perfil'); renderPerfil(); }
+function renderPerfil(){
+  const u=userDe(perfilVendo); if(!u.username)return;
+  document.getElementById('pAvatar').textContent=u.av||'🐥'; document.getElementById('pAvatar').style.background=u.cor||'#fff';
+  document.getElementById('pNome').innerHTML=esc(u.name)+(u.username==='tung_sahur'?'<span class="selo goofy">GOOFY ★</span>':'')+(saoAmigos(sessao,u.username)&&u.username!==sessao?' <span class="selo">💛 amigo</span>':'');
+  document.getElementById('pUser').textContent='@'+u.username;
+  document.getElementById('pBio').textContent=u.bio||'';
+  const nPosts=DB.posts.filter(p=>p.author===u.username&&!p.parent).length;
+  const seg=seguidoresDe(u.username).length, sdo=seguindo(u.username).length, ami=amigosDe(u.username).length;
+  document.getElementById('pStats').innerHTML='<span>🐥 '+nPosts+' chirps</span><span>👥 '+seg+' seguidores</span><span>➡️ '+sdo+' seguindo</span><span>💛 '+ami+' amigos</span>';
+  const ac=document.getElementById('pAcoes');
+  if(u.username===sessao) ac.innerHTML='<button class="btn peq" onclick="abrirEdit()">🎨 editar ninho</button>';
+  else ac.innerHTML='<button class="btn peq '+(seguindo(sessao).includes(u.username)?'verde':'azul')+'" onclick="seguir(\''+esc(u.username)+'\')">'+(seguindo(sessao).includes(u.username)?'✔️ seguindo':'➕ seguir')+'</button><button class="btn peq rosa" onclick="dmPara(\''+esc(u.username)+'\')">💌 msg</button>';
+  let posts=[];
+  if(pAba==='posts') posts=DB.posts.filter(p=>p.author===u.username&&!p.parent).sort((a,b)=>b.time-a.time);
+  if(pAba==='curtidos') posts=DB.posts.filter(p=>(p.likes||[]).includes(u.username)&&!p.parent).sort((a,b)=>b.time-a.time);
+  if(pAba==='midia') posts=DB.posts.filter(p=>p.author===u.username&&p.midia).sort((a,b)=>b.time-a.time);
+  document.getElementById('feedPerfil').innerHTML=posts.map(p=>cardPost(p,true)).join('')||'<div class="vazio"><span class="big">🥚</span>nada aqui... ainda!</div>';
+}
+function abrirEdit(){ const u=eu(); document.getElementById('editNome').value=u.name; document.getElementById('editBio').value=u.bio||''; avSel2=u.av; montarAvatars(); document.getElementById('modalEdit').classList.add('aberto'); }
+function salvarPerfil(){ const u=eu(); u.name=document.getElementById('editNome').value.trim()||u.name; u.bio=document.getElementById('editBio').value.trim(); if(avSel2)u.av=avSel2; salvar(); document.getElementById('modalEdit').classList.remove('aberto'); boot(); toast('🎨 ninho reformado!'); }
+
+/* ============ THREAD ============ */
+function abrirThread(id){ threadId=id; renderThread(); document.getElementById('modalThread').classList.add('aberto'); }
+function fecharThread(){ document.getElementById('modalThread').classList.remove('aberto'); threadId=null; renderTudo(true); }
+function renderThread(){
+  const p=DB.posts.find(x=>x.id===threadId); if(!p)return fecharThread();
+  const filhos=DB.posts.filter(x=>x.parent===p.id).sort((a,b)=>a.time-b.time);
+  document.getElementById('threadBody').innerHTML=cardPost(p,false)+'<h3 style="margin:10px 0">💬 '+(filhos.length)+' respostas</h3>'+(filhos.map(f=>cardPost(f,false)).join('')||'<small>seja o primeiro a fofocar! 🐣</small>');
+}
+function responderThread(){
+  const t=document.getElementById('threadTxt').value.trim(); if(!t)return;
+  DB.posts.push({id:uid(),author:sessao,text:t,midia:'',time:agora(),likes:[],reposts:[],parent:threadId});
+  const p=DB.posts.find(x=>x.id===threadId); if(p&&p.author!==sessao)notificar(p.author,{tipo:'reply',de:sessao,texto:'respondeu seu chirp! 💬',post:threadId});
+  document.getElementById('threadTxt').value=''; salvar(); SFX.send(); renderThread();
+}
+
+/* ============ NOTIF / AMIGOS / DM ============ */
+function renderNotifBadge(){
+  const n=DB.notifs.filter(x=>x.para===sessao&&!x.lida).length;
+  const b=document.getElementById('badgeNotif'); b.textContent=n; b.classList.toggle('hidden',!n);
+  const dms=DB.dms.filter(d=>d.para===sessao&&!d.lida).length;
+  const bd=document.getElementById('badgeDM'); bd.textContent=dms; bd.classList.toggle('hidden',!dms);
+  const pedidos=seguidoresDe(sessao).filter(u=>!seguindo(sessao).includes(u)).length;
+  const ba=document.getElementById('badgeAmigos'); ba.textContent=pedidos; ba.classList.toggle('hidden',!pedidos);
+}
+function renderNotif(){
+  const list=DB.notifs.filter(x=>x.para===sessao);
+  document.getElementById('listaNotif').innerHTML=list.map(n=>{ const d=userDe(n.de); const ic={like:'❤️',follow:'🎉',reply:'💬',repost:'🔁',friend:'💛'}[n.tipo]||'🔔';
+    return '<div class="notif'+(n.lida?'':' nova')+'"><div class="avatar g" style="background:'+esc(d.cor)+'">'+esc(d.av)+'</div><div style="flex:1"><b>'+ic+' @'+esc(n.de)+'</b> '+esc(n.texto)+'<br><small>'+tempo(n.time)+'</small></div>'+(n.post?'<button class="btn peq" onclick="abrirThread(\''+n.post+'\')">ver 👀</button>':'')+'</div>'; }).join('')||'<div class="vazio"><span class="big">🕊️</span>nenhuma fofoca... por enquanto!</div>';
+  DB.notifs.forEach(n=>{if(n.para===sessao)n.lida=true}); salvar(); renderNotifBadge();
+}
+function limparNotif(){ DB.notifs=DB.notifs.filter(x=>x.para!==sessao); salvar(); renderNotif(); }
+function renderAmigos(){
+  const meusSeg=seguidoresDe(sessao), euSigo=seguindo(sessao);
+  const pedidos=meusSeg.filter(u=>!euSigo.includes(u));
+  document.getElementById('listaPedidos').innerHTML=pedidos.map(u=>{const d=userDe(u);return '<div class="sug"><div class="avatar g" style="background:'+esc(d.cor)+'">'+esc(d.av)+'</div><div style="flex:1;cursor:pointer" onclick="verPerfil(\''+esc(u)+'\')"><b>'+esc(d.name)+'</b><br><small>@'+esc(u)+' quer ser seu amigo!</small></div><button class="btn peq verde" onclick="seguir(\''+esc(u)+'\')">💛 aceitar</button></div>'}).join('')||'<small>ninguém na fila... cê é popular demais 😎</small>';
+  const amis=amigosDe(sessao);
+  document.getElementById('listaAmigos').innerHTML=amis.map(u=>{const d=userDe(u);return '<div class="sug"><div class="avatar g" style="background:'+esc(d.cor)+'">'+esc(d.av)+'</div><div style="flex:1;cursor:pointer" onclick="verPerfil(\''+esc(u)+'\')"><b>'+esc(d.name)+' 💛</b><br><small>@'+esc(u)+'</small></div><button class="btn peq rosa" onclick="dmPara(\''+esc(u)+'\')">💌</button><button class="btn peq" onclick="seguir(\''+esc(u)+'\')">❌</button></div>'}).join('')||'<small>sem amigos mútuos ainda. Segue e reza pra seguirem de volta 🙏</small>';
+  document.getElementById('listaSeg').innerHTML='<b>➡️ seguindo ('+euSigo.length+'):</b> '+euSigo.map(u=>'@'+u).join(' • ')+'<br><br><b>👥 seguidores ('+meusSeg.length+'):</b> '+meusSeg.map(u=>'@'+u).join(' • ');
+}
+function dmPara(u){ dmCom=u; ir('msgs'); renderDM(); }
+function renderDM(){
+  const amis=[...new Set([...amigosDe(sessao),...seguindo(sessao),...seguidoresDe(sessao)])];
+  document.getElementById('dmLista').innerHTML='<b>📇 conversas</b><br><br>'+(amis.map(u=>{const d=userDe(u);const naoLidas=DB.dms.filter(m=>m.para===sessao&&m.de===u&&!m.lida).length;return '<div class="sug" style="'+(dmCom===u?'background:var(--amarelo)':'')+'" onclick="dmPara(\''+esc(u)+'\')"><div class="avatar g" style="background:'+esc(d.cor)+'">'+esc(d.av)+'</div><div style="flex:1"><b>'+esc(d.name)+'</b><br><small>@'+esc(u)+'</small></div>'+(naoLidas?'<span class="badge" style="background:#FF3B3B;color:#fff;border-radius:99px;padding:1px 8px;font-size:12px;font-weight:900">'+naoLidas+'</span>':'')+'</div>'}).join('')||'<small>segue alguém pra fofocar no privado! 👀</small>');
+  if(!dmCom){document.getElementById('dmMsgs').innerHTML='<div class="vazio"><span class="big">💌</span>escolha um goofy ao lado!</div>';return;}
+  const d=userDe(dmCom); document.getElementById('dmTopo').innerHTML='<div style="display:flex;gap:8px;align-items:center;cursor:pointer" onclick="verPerfil(\''+esc(dmCom)+'\')"><div class="avatar g" style="background:'+esc(d.cor)+'">'+esc(d.av)+'</div><b>'+esc(d.name)+' @'+esc(dmCom)+'</b></div>';
+  const msgs=DB.dms.filter(m=>(m.de===sessao&&m.para===dmCom)||(m.de===dmCom&&m.para===sessao)).sort((a,b)=>a.time-b.time);
+  document.getElementById('dmMsgs').innerHTML=msgs.map(m=>'<div class="dm-bolha '+(m.de===sessao?'dm-mim':'dm-dele')+'">'+esc(m.texto)+'<br><small style="opacity:.6">'+tempo(m.time)+'</small></div>').join('')||'<small>nenhuma mensagem... diga oi! 👋</small>';
+  document.getElementById('dmMsgs').scrollTop=99999;
+  DB.dms.forEach(m=>{if(m.para===sessao&&m.de===dmCom)m.lida=true}); salvar(); renderNotifBadge();
+}
+function enviarDM(){
+  const t=document.getElementById('dmTxt').value.trim(); if(!t||!dmCom)return toast('👻 escolha um amigo e escreva algo!');
+  DB.dms.push({id:uid(),de:sessao,para:dmCom,texto:t,time:agora(),lida:false}); document.getElementById('dmTxt').value=''; salvar(); SFX.send(); renderDM();
+  // bot responde
+  const alvo=userDe(dmCom);
+  if(alvo.pass==='x'){ setTimeout(()=>{ const R=['KAKAKA boa!! 🤣','fofoque mais, tô amando 👀','isso fica entre nós 🤫','BABABOSGUE 🌀','cê é meu amigo favorito (não conta pros outros) 💛','manda mais meme 🍕']; DB.dms.push({id:uid(),de:dmCom,para:sessao,texto:R[Math.floor(Math.random()*R.length)],time:agora(),lida:false}); salvar(); renderNotifBadge(); if(!document.getElementById('view-msgs').classList.contains('hidden'))renderDM(); else toast('💌 nova mensagem de @'+dmCom); SFX.coin(); },2000+Math.random()*3000); }
+}
+
+/* ============ FX ============ */
+function toast(m,ms){ const t=document.getElementById('toast'); t.textContent=m; t.style.display='block'; clearTimeout(t._h); t._h=setTimeout(()=>t.style.display='none',ms||2200); }
+function confete(n){ const E=['🐥','✨','🍕','💛','🎉','🌀','🍌']; for(let i=0;i<n;i++){ const d=document.createElement('div'); d.className='confete'; d.textContent=E[Math.floor(Math.random()*E.length)]; d.style.left=Math.random()*100+'vw'; d.style.fontSize=(14+Math.random()*26)+'px'; d.style.animationDuration=(1.5+Math.random()*2)+'s'; document.body.appendChild(d); setTimeout(()=>d.remove(),4000);} }
+function boom(x,y,e){ for(let i=0;i<6;i++){ const d=document.createElement('div'); d.className='like-boom'; d.textContent=e||'❤️'; d.style.left=(x+Math.random()*60-30)+'px'; d.style.top=(y-10)+'px'; document.body.appendChild(d); setTimeout(()=>d.remove(),1000);} }
+
+/* ============ BOOT ============ */
+function renderTudo(leve){ renderFeed(leve); renderExplorar(); renderSugs(); renderNotifBadge();
+  const u=eu(); if(u){ document.getElementById('miniEu').innerHTML='<div class="avatar" style="background:'+esc(u.cor)+'">'+esc(u.av)+'</div><div><b>'+esc(u.name)+'</b><br><small>@'+esc(u.username)+' • 💛 '+amigosDe(sessao).length+' amigos</small></div>'; document.getElementById('compAvatar').textContent=u.av; document.getElementById('compAvatar').style.background=u.cor; }
+}
+function boot(){
+  if(!sessao||!eu()){ document.getElementById('modalAuth').classList.add('aberto'); trocarAuth('cad'); return; }
+  renderTudo(); ir('home'); renderNotifBadge();
+}
+carregar(); montarAvatars(); montarFigs();
+document.getElementById('txtPost').addEventListener('input',atualizaCount);
+document.getElementById('buscaTopo').addEventListener('keydown',e=>{if(e.key==='Enter')buscar(e.target.value)});
+setInterval(()=>{ // pântano vivo: bot chirpa sozinho
+  if(!sessao||document.hidden)return; if(Math.random()>0.25)return;
+  const bots=DB.users.filter(u=>u.pass==='x'&&u.username!==sessao); if(!bots.length)return;
+  const b=bots[Math.floor(Math.random()*bots.length)];
+  const extras=['alguém aceita um abraço goofy? 🤗','acabei de regar minha samambaia com refrigerante 🪴','#bababosgue do dia: dance como se ninguém tivesse vendo (mas tão) 🕺','qual é o melhor sabor de pizza? ERRAR É PERMITIDO 🍕','me segue que eu sigo de volta, lei do pântano 🤝','meu despertador desistiu de mim ⏰😴'];
+  DB.posts.unshift({id:uid(),author:b.username,text:extras[Math.floor(Math.random()*extras.length)],midia:Math.random()<.3?FIGS[Math.floor(Math.random()*FIGS.length)]:'',time:agora(),likes:[],reposts:[]});
+  salvar(); if(!document.getElementById('view-home').classList.contains('hidden'))renderFeed(true); renderExplorar();
+},25000);
+boot();
+</script>
+</body>
+</html>
